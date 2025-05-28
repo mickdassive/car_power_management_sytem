@@ -1,0 +1,224 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "2800815a-f06a-4e36-93dc-fea3151edeb4")
+	(paper "A4")
+	(lib_symbols)
+	(sheet
+		(at 87.63 27.94)
+		(size 20.32 26.67)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "4bb0e25f-21bd-4c8e-b812-67de67b3250d")
+		(property "Sheetname" "CAN_BUS"
+			(at 87.63 27.2284 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "CAN_BUS.kicad_sch"
+			(at 87.63 55.1946 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "distrabution_controler"
+				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 59.69 31.75)
+		(size 22.86 22.86)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "64c96306-6452-4765-9119-2ed1bbe85c0a")
+		(property "Sheetname" "ANALOUGE"
+			(at 59.69 31.0384 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "ANALOUGE.kicad_sch"
+			(at 59.69 55.1946 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "distrabution_controler"
+				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 163.83 40.64)
+		(size 39.37 24.13)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "7fbfb42f-96da-4e82-966c-81097b84f0b1")
+		(property "Sheetname" "DISTRABUTION"
+			(at 163.83 39.9284 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "DISTRABUTION.kicad_sch"
+			(at 163.83 65.3546 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "distrabution_controler"
+				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 119.38 33.02)
+		(size 26.67 27.94)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "925a5d1c-4c1f-4d79-8354-11bd5f3ca015")
+		(property "Sheetname" "POWER_SUPPLY"
+			(at 119.38 32.3084 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "POWER_SUPPLY.kicad_sch"
+			(at 119.38 61.5446 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "distrabution_controler"
+				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 22.86 31.75)
+		(size 25.4 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "cc9feaf5-e3f6-4501-9fb5-0cfb07e51032")
+		(property "Sheetname" "MCU_IO"
+			(at 22.86 31.0384 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "MCU_IO.kicad_sch"
+			(at 22.86 57.7346 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "distrabution_controler"
+				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)
