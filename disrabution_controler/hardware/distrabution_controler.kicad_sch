@@ -6,48 +6,6 @@
 	(paper "A4")
 	(lib_symbols)
 	(sheet
-		(at 87.63 27.94)
-		(size 20.32 26.67)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "4bb0e25f-21bd-4c8e-b812-67de67b3250d")
-		(property "Sheetname" "CAN_BUS"
-			(at 87.63 27.2284 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "CAN_BUS.kicad_sch"
-			(at 87.63 55.1946 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "distrabution_controler"
-				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4"
-					(page "4")
-				)
-			)
-		)
-	)
-	(sheet
 		(at 59.69 31.75)
 		(size 22.86 22.86)
 		(exclude_from_sim no)
