@@ -1832,7 +1832,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "072ceb2d-497c-4d23-8a79-8311ec75c353")
-		(property "Reference" "#PWR088"
+		(property "Reference" "#PWR054"
 			(at 167.64 30.48 0)
 			(effects
 				(font
@@ -1882,7 +1882,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "#PWR088")
+					(reference "#PWR054")
 					(unit 1)
 				)
 			)
@@ -1914,7 +1914,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 148.59 26.67 0)
 			(effects
 				(font
@@ -1934,6 +1934,15 @@
 		)
 		(property "Description" "Inductor"
 			(at 148.59 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Digikey Part Number" "445-173052-1-ND"
+			(at 148.59 26.67 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1966,7 +1975,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "0bc3c17b-fc0a-400f-9947-af4ad6bb39d5")
-		(property "Reference" "R82"
+		(property "Reference" "R51"
 			(at 156.21 29.2099 0)
 			(effects
 				(font
@@ -1984,7 +1993,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 151.892 30.48 90)
 			(effects
 				(font
@@ -2011,6 +2020,15 @@
 				(hide yes)
 			)
 		)
+		(property "Digikey Part Number" "541-5351-1-ND"
+			(at 153.67 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "81592095-5543-4911-87da-94d7bd980b59")
 		)
@@ -2020,7 +2038,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "R82")
+					(reference "R51")
 					(unit 1)
 				)
 			)
@@ -2031,12 +2049,12 @@
 		(at 135.89 29.21 180)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "16b6c853-2661-4d84-9f04-35eaed81a444")
-		(property "Reference" "TP19"
+		(property "Reference" "TP26"
 			(at 138.43 31.8769 0)
 			(effects
 				(font
@@ -2054,7 +2072,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 130.81 29.21 0)
 			(effects
 				(font
@@ -2087,7 +2105,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "TP19")
+					(reference "TP26")
 					(unit 1)
 				)
 			)
@@ -2099,11 +2117,11 @@
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "1d458d20-4e83-4a2f-8d59-19ef2b8e4c16")
-		(property "Reference" "TP22"
+		(property "Reference" "TP27"
 			(at 80.264 37.846 0)
 			(effects
 				(font
@@ -2121,7 +2139,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 77.47 43.18 0)
 			(effects
 				(font
@@ -2154,7 +2172,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "TP22")
+					(reference "TP27")
 					(unit 1)
 				)
 			)
@@ -2165,12 +2183,12 @@
 		(at 156.21 26.67 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "1ef005ee-ad2d-43f0-b2fb-441ef021bf4d")
-		(property "Reference" "TP20"
+		(property "Reference" "TP25"
 			(at 158.75 22.7329 0)
 			(effects
 				(font
@@ -2188,7 +2206,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 161.29 26.67 0)
 			(effects
 				(font
@@ -2221,7 +2239,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "TP20")
+					(reference "TP25")
 					(unit 1)
 				)
 			)
@@ -2237,7 +2255,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "51d69636-f175-48df-aed1-9e5d30991742")
-		(property "Reference" "#PWR085"
+		(property "Reference" "#PWR059"
 			(at 153.67 50.8 0)
 			(effects
 				(font
@@ -2287,7 +2305,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "#PWR085")
+					(reference "#PWR059")
 					(unit 1)
 				)
 			)
@@ -2303,7 +2321,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "569a0c01-2f6c-49a8-b6a3-528ea2ccad46")
-		(property "Reference" "#PWR084"
+		(property "Reference" "#PWR056"
 			(at 120.65 40.64 0)
 			(effects
 				(font
@@ -2353,7 +2371,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "#PWR084")
+					(reference "#PWR056")
 					(unit 1)
 				)
 			)
@@ -2369,7 +2387,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "5ddc2500-a9f9-4c2d-a032-1bb3c0cce759")
-		(property "Reference" "U4"
+		(property "Reference" "U7"
 			(at 120.65 16.51 0)
 			(effects
 				(font
@@ -2412,6 +2430,15 @@
 				(hide yes)
 			)
 		)
+		(property "Digikey Part Number" "31-AP62150WU-7CT-ND"
+			(at 120.65 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "110c9bc7-ccfa-4484-ace1-0fe678d26d15")
 		)
@@ -2433,7 +2460,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "U4")
+					(reference "U7")
 					(unit 1)
 				)
 			)
@@ -2449,7 +2476,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "5def0a59-7288-4e60-baef-c0405bfb71e6")
-		(property "Reference" "C17"
+		(property "Reference" "C34"
 			(at 167.64 29.2099 0)
 			(effects
 				(font
@@ -2467,7 +2494,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 164.7952 34.29 0)
 			(effects
 				(font
@@ -2494,6 +2521,15 @@
 				(hide yes)
 			)
 		)
+		(property "Digikey Part Number" "490-7611-1-ND"
+			(at 163.83 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "adcb29a5-4fc7-4f5a-b4f2-9d14e270d3d4")
 		)
@@ -2503,7 +2539,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "C17")
+					(reference "C34")
 					(unit 1)
 				)
 			)
@@ -2519,7 +2555,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "67147b7c-75cb-41bc-9f8c-dd5d5156a54f")
-		(property "Reference" "C18"
+		(property "Reference" "C33"
 			(at 102.87 26.6699 0)
 			(effects
 				(font
@@ -2537,7 +2573,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 100.0252 31.75 0)
 			(effects
 				(font
@@ -2564,6 +2600,15 @@
 				(hide yes)
 			)
 		)
+		(property "Digikey Part Number" "1276-1038-1-ND"
+			(at 99.06 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "9610185c-11d5-404c-9c3f-2b08b2701273")
 		)
@@ -2573,7 +2618,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "C18")
+					(reference "C33")
 					(unit 1)
 				)
 			)
@@ -2589,7 +2634,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "6dba443a-fbaa-425e-9422-95250c4a005a")
-		(property "Reference" "R81"
+		(property "Reference" "R52"
 			(at 74.93 38.0999 0)
 			(effects
 				(font
@@ -2607,7 +2652,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 74.168 39.37 90)
 			(effects
 				(font
@@ -2634,6 +2679,15 @@
 				(hide yes)
 			)
 		)
+		(property "Digikey Part Number" "541-100KHCT-ND"
+			(at 72.39 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "504eaa07-f362-4da7-8106-a75aa3408c37")
 		)
@@ -2643,7 +2697,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "R81")
+					(reference "R52")
 					(unit 1)
 				)
 			)
@@ -2659,7 +2713,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "7cf7aab6-d038-4d84-afc2-8e42bd220e31")
-		(property "Reference" "#PWR087"
+		(property "Reference" "#PWR055"
 			(at 99.06 38.1 0)
 			(effects
 				(font
@@ -2709,7 +2763,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "#PWR087")
+					(reference "#PWR055")
 					(unit 1)
 				)
 			)
@@ -2725,7 +2779,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "80538633-3189-4394-a631-de7f4f3b927a")
-		(property "Reference" "R79"
+		(property "Reference" "R55"
 			(at 44.45 57.1499 0)
 			(effects
 				(font
@@ -2743,7 +2797,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 40.132 58.42 90)
 			(effects
 				(font
@@ -2770,6 +2824,15 @@
 				(hide yes)
 			)
 		)
+		(property "Digikey Part Number" "RMCF0603JT10K0CT-ND"
+			(at 41.91 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "8d2cfdc8-3cb2-4ef4-b349-03fa73ee9e3a")
 		)
@@ -2779,7 +2842,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "R79")
+					(reference "R55")
 					(unit 1)
 				)
 			)
@@ -2795,7 +2858,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "8f9952bc-b9b4-4c79-9c6c-9f9c92b1a978")
-		(property "Reference" "R80"
+		(property "Reference" "R54"
 			(at 54.61 41.9099 0)
 			(effects
 				(font
@@ -2813,7 +2876,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 53.848 43.18 90)
 			(effects
 				(font
@@ -2840,6 +2903,15 @@
 				(hide yes)
 			)
 		)
+		(property "Digikey Part Number" "541-100KHCT-ND"
+			(at 52.07 43.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "e7ba7ac5-80b1-4200-a90e-528e1628d197")
 		)
@@ -2849,7 +2921,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "R80")
+					(reference "R54")
 					(unit 1)
 				)
 			)
@@ -2865,7 +2937,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "937628d5-69ba-4178-8839-af6bd9d57269")
-		(property "Reference" "R83"
+		(property "Reference" "R53"
 			(at 156.21 39.3699 0)
 			(effects
 				(font
@@ -2883,7 +2955,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 151.892 40.64 90)
 			(effects
 				(font
@@ -2910,6 +2982,15 @@
 				(hide yes)
 			)
 		)
+		(property "Digikey Part Number" "RMCF0603JT10K0CT-ND"
+			(at 153.67 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "7b8d796d-a7fc-42d8-b0a4-da887498511d")
 		)
@@ -2919,7 +3000,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "R83")
+					(reference "R53")
 					(unit 1)
 				)
 			)
@@ -2935,7 +3016,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "95bc0afa-b713-4349-9aa9-2a0ae5c2f3e1")
-		(property "Reference" "C16"
+		(property "Reference" "C32"
 			(at 139.7 21.5899 0)
 			(effects
 				(font
@@ -2953,7 +3034,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 136.8552 26.67 0)
 			(effects
 				(font
@@ -2980,6 +3061,15 @@
 				(hide yes)
 			)
 		)
+		(property "Digikey Part Number" "399-C0603C104M5RACTUCT-ND"
+			(at 135.89 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "95fe23d0-44ff-4076-a904-dda469db986d")
 		)
@@ -2989,7 +3079,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "C16")
+					(reference "C32")
 					(unit 1)
 				)
 			)
@@ -3000,11 +3090,11 @@
 		(at 38.1 53.34 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "9c416a55-de0e-4442-9a28-b72c725f7727")
-		(property "Reference" "TP23"
+		(property "Reference" "TP29"
 			(at 36.068 48.006 0)
 			(effects
 				(font
@@ -3022,7 +3112,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 43.18 53.34 0)
 			(effects
 				(font
@@ -3055,7 +3145,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "TP23")
+					(reference "TP29")
 					(unit 1)
 				)
 			)
@@ -3071,7 +3161,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "a11608bc-11ba-4eb8-8fe0-04a763bd49f2")
-		(property "Reference" "#PWR081"
+		(property "Reference" "#PWR061"
 			(at 52.07 64.77 0)
 			(effects
 				(font
@@ -3121,7 +3211,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "#PWR081")
+					(reference "#PWR061")
 					(unit 1)
 				)
 			)
@@ -3136,7 +3226,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "a2a26da8-1a81-4788-a37b-c5e97a598db1")
-		(property "Reference" "Q19"
+		(property "Reference" "Q2"
 			(at 75.946 49.276 0)
 			(effects
 				(font
@@ -3154,7 +3244,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 74.93 45.72 0)
 			(effects
 				(font
@@ -3208,6 +3298,15 @@
 				(hide yes)
 			)
 		)
+		(property "Digikey Part Number" "BSS127H6327XTSA2CT-ND"
+			(at 69.85 48.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "91862cd5-dba8-4925-89ad-944a23da2e23")
 		)
@@ -3220,7 +3319,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "Q19")
+					(reference "Q2")
 					(unit 1)
 				)
 			)
@@ -3235,7 +3334,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "a3e0b005-3838-411c-b2b4-3ec7f6cc2cea")
-		(property "Reference" "Q18"
+		(property "Reference" "Q3"
 			(at 55.88 52.0699 0)
 			(effects
 				(font
@@ -3253,7 +3352,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 54.61 50.8 0)
 			(effects
 				(font
@@ -3307,6 +3406,15 @@
 				(hide yes)
 			)
 		)
+		(property "Digikey Part Number" "BSS127H6327XTSA2CT-ND"
+			(at 49.53 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "2"
 			(uuid "21e716c6-8dd8-4858-b341-3b6edbe3f56c")
 		)
@@ -3319,7 +3427,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "Q18")
+					(reference "Q3")
 					(unit 1)
 				)
 			)
@@ -3335,7 +3443,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d5a83ff5-0b2f-4a9a-9b3c-6a31b1754644")
-		(property "Reference" "#PWR080"
+		(property "Reference" "#PWR053"
 			(at 104.14 27.94 0)
 			(effects
 				(font
@@ -3385,7 +3493,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "#PWR080")
+					(reference "#PWR053")
 					(unit 1)
 				)
 			)
@@ -3401,7 +3509,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d7aeacd7-1064-4abb-b497-216d7ac18dc5")
-		(property "Reference" "#PWR090"
+		(property "Reference" "#PWR058"
 			(at 63.5 39.37 0)
 			(effects
 				(font
@@ -3451,7 +3559,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "#PWR090")
+					(reference "#PWR058")
 					(unit 1)
 				)
 			)
@@ -3467,7 +3575,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "e9e15c4d-abeb-4f87-bfad-1d2f7aa958f9")
-		(property "Reference" "#PWR083"
+		(property "Reference" "#PWR062"
 			(at 41.91 68.58 0)
 			(effects
 				(font
@@ -3517,7 +3625,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "#PWR083")
+					(reference "#PWR062")
 					(unit 1)
 				)
 			)
@@ -3533,7 +3641,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "f1fa1318-7dae-404b-9bd9-64ec855d9c2d")
-		(property "Reference" "#PWR082"
+		(property "Reference" "#PWR060"
 			(at 72.39 59.69 0)
 			(effects
 				(font
@@ -3583,7 +3691,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "#PWR082")
+					(reference "#PWR060")
 					(unit 1)
 				)
 			)
@@ -3599,7 +3707,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "f29cdd67-f77f-42f2-b92e-d6ff72074aac")
-		(property "Reference" "#PWR086"
+		(property "Reference" "#PWR057"
 			(at 163.83 40.64 0)
 			(effects
 				(font
@@ -3649,7 +3757,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "#PWR086")
+					(reference "#PWR057")
 					(unit 1)
 				)
 			)
@@ -3660,11 +3768,11 @@
 		(at 63.5 48.26 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "f490f52a-9aa5-4471-856b-4fbaea6b48e3")
-		(property "Reference" "TP21"
+		(property "Reference" "TP28"
 			(at 61.722 42.418 0)
 			(effects
 				(font
@@ -3682,7 +3790,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
 			(at 68.58 48.26 0)
 			(effects
 				(font
@@ -3715,7 +3823,7 @@
 		(instances
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/925a5d1c-4c1f-4d79-8354-11bd5f3ca015"
-					(reference "TP21")
+					(reference "TP28")
 					(unit 1)
 				)
 			)
