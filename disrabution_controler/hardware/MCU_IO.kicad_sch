@@ -6926,6 +6926,331 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "NMOS_1"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "Q3"
+				(at 6.35 1.2701 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "NMOS"
+				(at 6.35 -1.2699 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+				(at 5.08 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://ngspice.sourceforge.io/docs/ngspice-html-manual/manual.xhtml#cha_MOSFETs"
+				(at 0 -12.7 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "N-MOSFET transistor, drain/source/gate"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Sim.Device" "NMOS"
+				(at 0 -17.145 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Sim.Type" "VDMOS"
+				(at 0 -19.05 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Sim.Pins" "1=D 2=G 3=S"
+				(at 0 -15.24 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Digikey Part Number" "BSS127H6327XTSA2CT-ND"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "transistor NMOS N-MOS N-MOSFET simulation"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "NMOS_1_0_1"
+				(polyline
+					(pts
+						(xy 0.254 1.905) (xy 0.254 -1.905)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.254 0) (xy -2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 2.286) (xy 0.762 1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 0.508) (xy 0.762 -0.508)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 -1.27) (xy 0.762 -2.286)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 -1.778) (xy 3.302 -1.778) (xy 3.302 1.778) (xy 0.762 1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.016 0) (xy 2.032 0.381) (xy 2.032 -0.381) (xy 1.016 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center 1.651 0)
+					(radius 2.794)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 2.54) (xy 2.54 1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 2.54 1.778)
+					(radius 0.254)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center 2.54 -1.778)
+					(radius 0.254)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 -2.54) (xy 2.54 0) (xy 0.762 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.794 0.508) (xy 2.921 0.381) (xy 3.683 0.381) (xy 3.81 0.254)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.302 0.381) (xy 2.921 -0.254) (xy 3.683 -0.254) (xy 3.302 0.381)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "NMOS_1_1_1"
+				(pin input line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "G"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 5.08 270)
+					(length 2.54)
+					(name "D"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 -5.08 90)
+					(length 2.54)
+					(name "S"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Power_Protection:D3V3X8U9LP3810"
 			(pin_names
 				(hide yes)
@@ -10108,322 +10433,6 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Simulation_SPICE:NMOS"
-			(pin_numbers
-				(hide yes)
-			)
-			(pin_names
-				(offset 0)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "Q"
-				(at 5.08 1.27 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "NMOS"
-				(at 5.08 -1.27 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" ""
-				(at 5.08 2.54 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "https://ngspice.sourceforge.io/docs/ngspice-html-manual/manual.xhtml#cha_MOSFETs"
-				(at 0 -12.7 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "N-MOSFET transistor, drain/source/gate"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Sim.Device" "NMOS"
-				(at 0 -17.145 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Sim.Type" "VDMOS"
-				(at 0 -19.05 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Sim.Pins" "1=D 2=G 3=S"
-				(at 0 -15.24 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "transistor NMOS N-MOS N-MOSFET simulation"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "NMOS_0_1"
-				(polyline
-					(pts
-						(xy 0.254 1.905) (xy 0.254 -1.905)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.254 0) (xy -2.54 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 2.286) (xy 0.762 1.27)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 0.508) (xy 0.762 -0.508)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 -1.27) (xy 0.762 -2.286)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.762 -1.778) (xy 3.302 -1.778) (xy 3.302 1.778) (xy 0.762 1.778)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.016 0) (xy 2.032 0.381) (xy 2.032 -0.381) (xy 1.016 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(circle
-					(center 1.651 0)
-					(radius 2.794)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 2.54) (xy 2.54 1.778)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(circle
-					(center 2.54 1.778)
-					(radius 0.254)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(circle
-					(center 2.54 -1.778)
-					(radius 0.254)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 -2.54) (xy 2.54 0) (xy 0.762 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.794 0.508) (xy 2.921 0.381) (xy 3.683 0.381) (xy 3.81 0.254)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 3.302 0.381) (xy 2.921 -0.254) (xy 3.683 -0.254) (xy 3.302 0.381)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "NMOS_1_1"
-				(pin input line
-					(at -5.08 0 0)
-					(length 2.54)
-					(name "G"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 2.54 5.08 270)
-					(length 2.54)
-					(name "D"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 2.54 -5.08 90)
-					(length 2.54)
-					(name "S"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
 		(symbol "power:+12V"
 			(power)
 			(pin_numbers
@@ -10878,12 +10887,6 @@
 		(uuid "024cefa3-36b9-4a6c-90b9-55d2545a8c42")
 	)
 	(junction
-		(at 200.66 146.05)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "03981f99-3b71-4319-8737-bcaee4c27525")
-	)
-	(junction
 		(at 130.81 115.57)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -10894,6 +10897,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "04720d7e-0864-48a0-b937-7c5ad0efba64")
+	)
+	(junction
+		(at 218.44 135.89)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "05c4b81b-96e4-4810-96a2-e02fec52dd4b")
 	)
 	(junction
 		(at 207.01 90.17)
@@ -10956,6 +10965,12 @@
 		(uuid "25fd8736-d538-4033-97da-caf06e8731c6")
 	)
 	(junction
+		(at 200.66 133.35)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2896ff91-4ab7-40a2-9374-b2d9662d7344")
+	)
+	(junction
 		(at 200.66 19.05)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -10966,6 +10981,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "2d283f23-5bde-46b8-9d91-ab1159f8a88c")
+	)
+	(junction
+		(at 261.62 96.52)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2de7039c-fad6-418f-b04e-aaaa1e0dc58d")
 	)
 	(junction
 		(at 190.5 19.05)
@@ -10992,22 +11013,28 @@
 		(uuid "38bbaa0c-975a-40c9-803b-4900663e9170")
 	)
 	(junction
+		(at 215.9 140.97)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "3979070e-cbd0-472f-82d5-14fbd817766a")
+	)
+	(junction
 		(at 213.36 34.29)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "39861d98-7914-4945-98ca-4e7f1ac41cb7")
 	)
 	(junction
-		(at 259.08 96.52)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "3a854052-2b32-4714-bf4b-5bd395051cec")
-	)
-	(junction
 		(at 264.16 48.26)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "3d09e09e-6236-47dd-8b30-9b3707fa9b3f")
+	)
+	(junction
+		(at 205.74 146.05)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "3d8708e4-f6af-4840-9379-6d329ddf3f64")
 	)
 	(junction
 		(at 257.81 19.05)
@@ -11038,12 +11065,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "4dcd6422-dd3d-432c-bd16-51f4abdf30e0")
-	)
-	(junction
-		(at 205.74 140.97)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "4eda83d7-f197-451c-a865-b8f162519d86")
 	)
 	(junction
 		(at 44.45 187.96)
@@ -11082,22 +11103,10 @@
 		(uuid "56d8a679-c593-4e05-8cbb-bebf5b76e7f7")
 	)
 	(junction
-		(at 210.82 135.89)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "57025e0b-cd18-4cbc-bb4f-7c8c8f5f8500")
-	)
-	(junction
 		(at 29.21 29.21)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "5a12a807-c651-4f20-bfac-f47fd02e1cba")
-	)
-	(junction
-		(at 213.36 133.35)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "65497f46-9ee8-4379-bfcb-d55c1187f9c3")
 	)
 	(junction
 		(at 48.26 91.44)
@@ -11208,12 +11217,6 @@
 		(uuid "8b528ab7-a4e8-4536-b64b-e56d2d936ada")
 	)
 	(junction
-		(at 203.2 143.51)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "8ef916a9-92a7-476b-80dc-9ae1bb00a3a5")
-	)
-	(junction
 		(at 256.54 48.26)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -11298,10 +11301,22 @@
 		(uuid "aaf210f5-bac8-40d0-8419-1f90eb637a5d")
 	)
 	(junction
+		(at 203.2 138.43)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ac4360e3-7ad3-4f21-b808-bd1a99f41527")
+	)
+	(junction
 		(at 166.37 19.05)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "af2cfbd4-6efe-46a5-9d00-b58d2353e0f5")
+	)
+	(junction
+		(at 213.36 143.51)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b1a2a240-7744-4a53-9c96-8d8772e5fb66")
 	)
 	(junction
 		(at 71.12 21.59)
@@ -11356,12 +11371,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "cefda898-621f-4596-9444-b963fb1f0d85")
-	)
-	(junction
-		(at 208.28 138.43)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "d5afb6e2-e285-4999-9492-d3d5de22c7d0")
 	)
 	(junction
 		(at 226.06 19.05)
@@ -11456,7 +11465,7 @@
 		(uuid "806735ec-5842-4056-aed3-a9c72ff53e28")
 	)
 	(no_connect
-		(at 195.58 123.19)
+		(at 194.31 123.19)
 		(uuid "80750108-ba18-4a82-84f8-4f63aeda24d1")
 	)
 	(no_connect
@@ -11517,6 +11526,16 @@
 	)
 	(wire
 		(pts
+			(xy 270.51 101.6) (xy 264.16 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "03bbc08d-ffa8-43de-879d-e95fe83595a4")
+	)
+	(wire
+		(pts
 			(xy 41.91 187.96) (xy 44.45 187.96)
 		)
 		(stroke
@@ -11547,6 +11566,16 @@
 	)
 	(wire
 		(pts
+			(xy 261.62 96.52) (xy 270.51 96.52)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "07a34e17-3bd9-487f-a81f-1e9399e626ec")
+	)
+	(wire
+		(pts
 			(xy 119.38 102.87) (xy 125.73 102.87)
 		)
 		(stroke
@@ -11557,13 +11586,13 @@
 	)
 	(wire
 		(pts
-			(xy 203.2 143.51) (xy 219.71 143.51)
+			(xy 210.82 147.32) (xy 210.82 128.27)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "0b490d52-6ffb-4dd4-9b1f-118913bf2cb4")
+		(uuid "0a7ba04f-59f9-4bfd-aed0-3d771b73290b")
 	)
 	(wire
 		(pts
@@ -11617,6 +11646,16 @@
 	)
 	(wire
 		(pts
+			(xy 213.36 143.51) (xy 219.71 143.51)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "104be4c1-8e0e-4a6e-8ce2-35ebe25b0e95")
+	)
+	(wire
+		(pts
 			(xy 232.41 19.05) (xy 238.76 19.05)
 		)
 		(stroke
@@ -11637,16 +11676,6 @@
 	)
 	(wire
 		(pts
-			(xy 213.36 133.35) (xy 213.36 147.32)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "11e826d5-25a7-458e-9ec5-6093081b4c68")
-	)
-	(wire
-		(pts
 			(xy 257.81 19.05) (xy 257.81 26.67)
 		)
 		(stroke
@@ -11657,7 +11686,7 @@
 	)
 	(wire
 		(pts
-			(xy 200.66 146.05) (xy 219.71 146.05)
+			(xy 199.39 146.05) (xy 205.74 146.05)
 		)
 		(stroke
 			(width 0)
@@ -11707,16 +11736,6 @@
 	)
 	(wire
 		(pts
-			(xy 259.08 96.52) (xy 270.51 96.52)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1b0548f0-1029-48f2-aec7-ef5c6caf1367")
-	)
-	(wire
-		(pts
 			(xy 208.28 162.56) (xy 208.28 163.83)
 		)
 		(stroke
@@ -11754,16 +11773,6 @@
 			(type default)
 		)
 		(uuid "25aae5c5-348b-4467-801e-727e34b24f7c")
-	)
-	(wire
-		(pts
-			(xy 200.66 138.43) (xy 208.28 138.43)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "26a52590-e009-40ec-bc0a-32316fdbbc3c")
 	)
 	(polyline
 		(pts
@@ -11957,26 +11966,6 @@
 	)
 	(wire
 		(pts
-			(xy 264.16 99.06) (xy 264.16 105.41)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "357dc57b-fa74-42c8-855b-ebc774fc8e10")
-	)
-	(wire
-		(pts
-			(xy 210.82 135.89) (xy 219.71 135.89)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "35f3317f-c4b2-4d29-b49b-3eeb3b23de35")
-	)
-	(wire
-		(pts
 			(xy 254 91.44) (xy 270.51 91.44)
 		)
 		(stroke
@@ -11984,16 +11973,6 @@
 			(type default)
 		)
 		(uuid "36fd82cd-2de5-435d-b813-bd013be26636")
-	)
-	(wire
-		(pts
-			(xy 213.36 133.35) (xy 219.71 133.35)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "39aaeb38-1756-4197-875e-e4b6355148a4")
 	)
 	(wire
 		(pts
@@ -12117,6 +12096,36 @@
 	)
 	(wire
 		(pts
+			(xy 199.39 128.27) (xy 200.66 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4d127809-7eef-45b0-8327-2cf61952bc7d")
+	)
+	(wire
+		(pts
+			(xy 208.28 125.73) (xy 219.71 125.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4d628ea1-cb49-40cc-90dc-5cb41691d2cf")
+	)
+	(wire
+		(pts
+			(xy 266.7 104.14) (xy 266.7 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4dd916a2-70a4-45c1-ba37-98885115377c")
+	)
+	(wire
+		(pts
 			(xy 250.19 88.9) (xy 251.46 88.9)
 		)
 		(stroke
@@ -12184,6 +12193,16 @@
 			(type default)
 		)
 		(uuid "574997fb-fa86-41ec-90f4-b908e3d76fdb")
+	)
+	(wire
+		(pts
+			(xy 264.16 101.6) (xy 264.16 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "58178a98-56c2-40fe-a0de-7110dcac9a78")
 	)
 	(wire
 		(pts
@@ -12257,6 +12276,16 @@
 	)
 	(wire
 		(pts
+			(xy 208.28 147.32) (xy 208.28 125.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5f3ff540-a65a-4c56-b01a-9a8e26f01844")
+	)
+	(wire
+		(pts
 			(xy 71.12 21.59) (xy 76.2 21.59)
 		)
 		(stroke
@@ -12264,16 +12293,6 @@
 			(type default)
 		)
 		(uuid "6098028c-f4d6-481d-a485-59845053c526")
-	)
-	(wire
-		(pts
-			(xy 266.7 101.6) (xy 266.7 105.41)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "61fa98ee-a2e2-4ba2-a243-3f2fdb391a94")
 	)
 	(wire
 		(pts
@@ -12387,13 +12406,13 @@
 	)
 	(wire
 		(pts
-			(xy 215.9 147.32) (xy 215.9 125.73)
+			(xy 259.08 99.06) (xy 259.08 105.41)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "6a748b1e-4066-4857-b273-f8b3ec842390")
+		(uuid "6a4a0be9-f45c-466b-9fec-340e180bf8db")
 	)
 	(wire
 		(pts
@@ -12497,13 +12516,23 @@
 	)
 	(wire
 		(pts
-			(xy 269.24 104.14) (xy 269.24 105.41)
+			(xy 205.74 146.05) (xy 205.74 147.32)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "7069c006-c3e5-4a11-b5a2-cddfed955f8e")
+		(uuid "7138efbc-b875-4ff8-a5a7-c306262f2332")
+	)
+	(wire
+		(pts
+			(xy 210.82 128.27) (xy 219.71 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "71886958-30b9-44fd-96de-0597444cb06c")
 	)
 	(wire
 		(pts
@@ -12517,13 +12546,23 @@
 	)
 	(wire
 		(pts
-			(xy 259.08 96.52) (xy 259.08 105.41)
+			(xy 261.62 96.52) (xy 261.62 105.41)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "74400f86-950a-4eb9-80f7-0b41d37a48df")
+	)
+	(wire
+		(pts
+			(xy 215.9 140.97) (xy 219.71 140.97)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "74c2daec-8ac9-4839-badf-8125eade62d3")
 	)
 	(wire
 		(pts
@@ -12587,16 +12626,6 @@
 	)
 	(wire
 		(pts
-			(xy 210.82 135.89) (xy 210.82 147.32)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7b45f46b-12a9-4f36-a095-5a209a540048")
-	)
-	(wire
-		(pts
 			(xy 130.81 115.57) (xy 133.35 115.57)
 		)
 		(stroke
@@ -12625,16 +12654,6 @@
 		)
 		(uuid "7c8c2533-ce8b-474f-b638-218c45cb5206")
 	)
-	(wire
-		(pts
-			(xy 205.74 140.97) (xy 205.74 147.32)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7d4a23df-fd23-4485-a7d4-b30854d7ac93")
-	)
 	(polyline
 		(pts
 			(xy 110.49 124.46) (xy 284.48 124.46)
@@ -12657,13 +12676,23 @@
 	)
 	(wire
 		(pts
-			(xy 205.74 140.97) (xy 219.71 140.97)
+			(xy 199.39 140.97) (xy 215.9 140.97)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "7e585212-ff44-42dd-b873-5bbe99b21f80")
+	)
+	(wire
+		(pts
+			(xy 218.44 135.89) (xy 219.71 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7eb55030-241d-4b96-95f6-8a48b4c1fe82")
 	)
 	(wire
 		(pts
@@ -12787,6 +12816,16 @@
 	)
 	(wire
 		(pts
+			(xy 203.2 138.43) (xy 219.71 138.43)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8be36492-6b31-477b-96e0-af4b1caeb9a7")
+	)
+	(wire
+		(pts
 			(xy 251.46 86.36) (xy 270.51 86.36)
 		)
 		(stroke
@@ -12834,16 +12873,6 @@
 			(type default)
 		)
 		(uuid "8e3d724d-baac-4716-924c-64b8c24d1da1")
-	)
-	(wire
-		(pts
-			(xy 218.44 128.27) (xy 219.71 128.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8eac9545-0da3-4dce-a2bf-4783bc887dde")
 	)
 	(wire
 		(pts
@@ -12947,7 +12976,7 @@
 	)
 	(wire
 		(pts
-			(xy 208.28 138.43) (xy 219.71 138.43)
+			(xy 199.39 138.43) (xy 203.2 138.43)
 		)
 		(stroke
 			(width 0)
@@ -13087,16 +13116,6 @@
 	)
 	(wire
 		(pts
-			(xy 208.28 138.43) (xy 208.28 147.32)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a7089af0-46d2-4dc6-a87b-eb6d51288a4e")
-	)
-	(wire
-		(pts
 			(xy 207.01 34.29) (xy 200.66 34.29)
 		)
 		(stroke
@@ -13104,6 +13123,16 @@
 			(type default)
 		)
 		(uuid "a86e17d0-69d4-4215-ab62-cbf8ef265715")
+	)
+	(wire
+		(pts
+			(xy 259.08 99.06) (xy 270.51 99.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ac410146-7906-48e3-880f-a4fae89b0a82")
 	)
 	(wire
 		(pts
@@ -13144,6 +13173,16 @@
 			(type default)
 		)
 		(uuid "b01c6503-d0ff-4b7a-a4d3-da07f0f0bdba")
+	)
+	(wire
+		(pts
+			(xy 215.9 140.97) (xy 215.9 147.32)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b0d71de2-dc2d-43be-8f33-65f7649ebbfd")
 	)
 	(wire
 		(pts
@@ -13207,17 +13246,7 @@
 	)
 	(wire
 		(pts
-			(xy 270.51 99.06) (xy 264.16 99.06)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b7cfff17-644a-4d51-b3d2-a810975282bb")
-	)
-	(wire
-		(pts
-			(xy 200.66 130.81) (xy 219.71 130.81)
+			(xy 199.39 130.81) (xy 219.71 130.81)
 		)
 		(stroke
 			(width 0)
@@ -13234,6 +13263,16 @@
 			(type default)
 		)
 		(uuid "b7f00904-4058-41ec-af1f-0333e558675a")
+	)
+	(wire
+		(pts
+			(xy 218.44 135.89) (xy 218.44 147.32)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b8ba2edd-02b8-496c-963f-d5ff283dc565")
 	)
 	(wire
 		(pts
@@ -13267,13 +13306,13 @@
 	)
 	(wire
 		(pts
-			(xy 270.51 104.14) (xy 269.24 104.14)
+			(xy 200.66 133.35) (xy 200.66 147.32)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "bda3d44b-39c6-467a-afea-dd77b01fbe2a")
+		(uuid "bba8f73a-679a-4f84-842b-441e7cbf99f7")
 	)
 	(wire
 		(pts
@@ -13337,26 +13376,6 @@
 	)
 	(wire
 		(pts
-			(xy 203.2 143.51) (xy 203.2 147.32)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c3f1fe68-15dd-4b78-9377-1118bfe6a3ea")
-	)
-	(wire
-		(pts
-			(xy 270.51 101.6) (xy 266.7 101.6)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c42d60e4-31b6-4a24-8972-a426b25dbc7b")
-	)
-	(wire
-		(pts
 			(xy 196.85 87.63) (xy 207.01 87.63)
 		)
 		(stroke
@@ -13364,6 +13383,16 @@
 			(type default)
 		)
 		(uuid "c4db8117-a45e-43b9-81e1-537d6106c268")
+	)
+	(wire
+		(pts
+			(xy 213.36 143.51) (xy 213.36 147.32)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c4f42866-3801-4da3-a273-13025edb33cd")
 	)
 	(wire
 		(pts
@@ -13387,7 +13416,7 @@
 	)
 	(wire
 		(pts
-			(xy 200.66 143.51) (xy 203.2 143.51)
+			(xy 199.39 143.51) (xy 213.36 143.51)
 		)
 		(stroke
 			(width 0)
@@ -13477,7 +13506,7 @@
 	)
 	(wire
 		(pts
-			(xy 200.66 133.35) (xy 213.36 133.35)
+			(xy 199.39 133.35) (xy 200.66 133.35)
 		)
 		(stroke
 			(width 0)
@@ -13487,17 +13516,7 @@
 	)
 	(wire
 		(pts
-			(xy 215.9 125.73) (xy 219.71 125.73)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ce7bde30-fd5e-464c-bf64-b11d5599ed91")
-	)
-	(wire
-		(pts
-			(xy 200.66 135.89) (xy 210.82 135.89)
+			(xy 199.39 135.89) (xy 218.44 135.89)
 		)
 		(stroke
 			(width 0)
@@ -13547,7 +13566,7 @@
 	)
 	(wire
 		(pts
-			(xy 250.19 96.52) (xy 259.08 96.52)
+			(xy 250.19 96.52) (xy 261.62 96.52)
 		)
 		(stroke
 			(width 0)
@@ -13597,16 +13616,6 @@
 	)
 	(wire
 		(pts
-			(xy 200.66 146.05) (xy 200.66 147.32)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d517db94-141d-4979-a425-040edfe9480f")
-	)
-	(wire
-		(pts
 			(xy 125.73 180.34) (xy 128.27 180.34)
 		)
 		(stroke
@@ -13637,13 +13646,13 @@
 	)
 	(wire
 		(pts
-			(xy 218.44 147.32) (xy 218.44 128.27)
+			(xy 205.74 146.05) (xy 219.71 146.05)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "d84060f2-a198-4082-826b-8d38bde9815e")
+		(uuid "d7dfa5e4-a1d2-4672-be9a-314381f65aed")
 	)
 	(wire
 		(pts
@@ -13657,6 +13666,16 @@
 	)
 	(wire
 		(pts
+			(xy 200.66 133.35) (xy 219.71 133.35)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dd1b03d4-c537-4f50-a80b-6fc120a3d3cc")
+	)
+	(wire
+		(pts
 			(xy 264.16 34.29) (xy 257.81 34.29)
 		)
 		(stroke
@@ -13664,16 +13683,6 @@
 			(type default)
 		)
 		(uuid "dfcaae06-0a99-4bc1-97c9-5f240ef14345")
-	)
-	(wire
-		(pts
-			(xy 200.66 140.97) (xy 205.74 140.97)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e134b8e6-683c-4b07-ad8d-bc5a6d7f4af6")
 	)
 	(wire
 		(pts
@@ -13897,6 +13906,16 @@
 	)
 	(wire
 		(pts
+			(xy 203.2 138.43) (xy 203.2 147.32)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f2fdc9fa-4fb8-47f0-9ebf-3fcdaf9b5fea")
+	)
+	(wire
+		(pts
 			(xy 40.64 21.59) (xy 50.8 21.59)
 		)
 		(stroke
@@ -14064,6 +14083,16 @@
 			(type default)
 		)
 		(uuid "fc130bf0-fa17-4302-a12d-8d2dc44c0262")
+	)
+	(wire
+		(pts
+			(xy 270.51 104.14) (xy 266.7 104.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fc13c5eb-408e-42af-9ca4-713629bd3241")
 	)
 	(wire
 		(pts
@@ -14427,7 +14456,7 @@
 	)
 	(global_label "CAN_ERR"
 		(shape input)
-		(at 196.85 59.69 0)
+		(at 196.85 57.15 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -14437,7 +14466,7 @@
 		)
 		(uuid "31e436af-8459-4e80-908a-5ab2a04045ae")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 208.1809 59.69 0)
+			(at 208.1809 57.15 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14482,6 +14511,28 @@
 		(uuid "3435eb79-3400-42db-a7e7-b84ef6e95b44")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 204.7942 72.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "ESP_IO0"
+		(shape input)
+		(at 270.51 104.14 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "34ecd00c-c03c-4f26-b68a-ca8fa8bdc346")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 281.2361 104.14 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14779,7 +14830,7 @@
 	)
 	(global_label "CAN_TX"
 		(shape input)
-		(at 196.85 67.31 0)
+		(at 196.85 64.77 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -14789,7 +14840,7 @@
 		)
 		(uuid "579af3df-c02d-4d14-badf-da648c25250e")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 206.669 67.31 0)
+			(at 206.669 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15239,6 +15290,28 @@
 			)
 		)
 	)
+	(global_label "LNA"
+		(shape input)
+		(at 198.12 95.25 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "8d304575-5288-4807-955c-a40f198e12ef")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 204.5524 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "GPIO8"
 		(shape input)
 		(at 219.71 138.43 0)
@@ -15659,7 +15732,7 @@
 	)
 	(global_label "CAN_EN"
 		(shape input)
-		(at 196.85 64.77 0)
+		(at 196.85 67.31 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -15669,7 +15742,7 @@
 		)
 		(uuid "b751c598-1cc6-4641-898c-54a15cfa7154")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 206.9714 64.77 0)
+			(at 206.9714 67.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16363,7 +16436,7 @@
 	)
 	(global_label "CAN_WAKE"
 		(shape input)
-		(at 196.85 57.15 0)
+		(at 196.85 59.69 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -16373,7 +16446,7 @@
 		)
 		(uuid "f6c86784-1b5d-43ca-9cb0-5be79320c6d3")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 209.4509 57.15 0)
+			(at 209.4509 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16401,6 +16474,28 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "RST"
+		(shape input)
+		(at 270.51 101.6 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "f7b918dd-2eb0-4933-979c-f528958fd0d7")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 276.9423 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 				(hide yes)
 			)
 		)
@@ -16504,14 +16599,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART #" ""
-			(at 167.64 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
 		(pin "1"
 			(uuid "d5b5443f-fa5e-451f-800a-15b5e3c56445")
 		)
@@ -16572,15 +16659,6 @@
 			)
 		)
 		(property "Description" "Low Capacitance TVS Diode Array, 3.3V Standoff, 8 Channels, UDFN-9"
-			(at 208.28 154.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART NUMBER" "DT1240A-08LP3810-7DICT-ND"
 			(at 208.28 154.94 0)
 			(effects
 				(font
@@ -16826,15 +16904,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART #" "1276-1038-1-ND"
-			(at 270.51 30.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Digikey Part Number" "1276-1038-1-ND"
 			(at 270.51 30.48 0)
 			(effects
@@ -16914,15 +16983,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART #" "RMCF0603JT10K0CT-ND"
-			(at 213.36 87.63 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Digikey Part Number" "RMCF0603JT10K0CT-ND"
 			(at 213.36 87.63 0)
 			(effects
@@ -16949,7 +17009,7 @@
 	)
 	(symbol
 		(lib_id "Connector_Generic_MountingPin:Conn_01x08_MountingPin")
-		(at 195.58 138.43 180)
+		(at 194.31 138.43 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -16957,7 +17017,7 @@
 		(dnp no)
 		(uuid "0c1b0889-1d82-4b7d-8eb7-87931469a44d")
 		(property "Reference" "J7"
-			(at 192.532 128.016 0)
+			(at 191.262 128.016 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16965,7 +17025,7 @@
 			)
 		)
 		(property "Value" "~"
-			(at 195.58 148.59 0)
+			(at 194.31 148.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16973,7 +17033,7 @@
 			)
 		)
 		(property "Footprint" "Connector_Phoenix_MC:PhoenixContact_MC_1,5_8-GF-3.81_1x08_P3.81mm_Horizontal_ThreadedFlange"
-			(at 195.58 138.43 0)
+			(at 194.31 138.43 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16982,7 +17042,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 195.58 138.43 0)
+			(at 194.31 138.43 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16991,16 +17051,7 @@
 			)
 		)
 		(property "Description" "Generic connectable mounting pin connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)"
-			(at 195.58 138.43 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART NUMBER" "609-3825-ND"
-			(at 195.58 138.43 0)
+			(at 194.31 138.43 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17095,14 +17146,6 @@
 					(size 1.27 1.27)
 				)
 				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART #" ""
-			(at 90.17 167.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
 			)
 		)
 		(pin "4"
@@ -17241,15 +17284,6 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 251.46 22.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART #" "399-C0603C104M5RACTUCT-ND"
 			(at 251.46 22.86 0)
 			(effects
 				(font
@@ -17404,15 +17438,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART #" "399-C0603C104M5RACTUCT-ND"
-			(at 226.06 22.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Digikey Part Number" "399-C0603C104M5RACTUCT-ND"
 			(at 226.06 22.86 0)
 			(effects
@@ -17485,15 +17510,6 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 172.72 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART #" "399-C0603C104M5RACTUCT-ND"
 			(at 172.72 137.16 0)
 			(effects
 				(font
@@ -17807,115 +17823,6 @@
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/cc9feaf5-e3f6-4501-9fb5-0cfb07e51032"
 					(reference "TP6")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Simulation_SPICE:NMOS")
-		(at 36.83 185.42 90)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "31eec110-6dca-467b-9d83-e86153110b17")
-		(property "Reference" "Q1"
-			(at 35.5599 191.77 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "NMOS"
-			(at 38.0999 191.77 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 34.29 190.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://ngspice.sourceforge.io/docs/ngspice-html-manual/manual.xhtml#cha_MOSFETs"
-			(at 49.53 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "N-MOSFET transistor, drain/source/gate"
-			(at 36.83 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Sim.Device" "NMOS"
-			(at 53.975 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Sim.Type" "VDMOS"
-			(at 55.88 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Sim.Pins" "1=D 2=G 3=S"
-			(at 52.07 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Digikey Part Number" "BSS127H6327XTSA2CT-ND"
-			(at 36.83 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "59d75ea4-cba7-4e49-b71b-02cf0400b3dd")
-		)
-		(pin "3"
-			(uuid "a9f01b6c-03a9-4b73-8607-91e1c23be2ad")
-		)
-		(pin "2"
-			(uuid "1e89b65b-f060-4fe8-9862-8c8710f9c985")
-		)
-		(instances
-			(project ""
-				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/cc9feaf5-e3f6-4501-9fb5-0cfb07e51032"
-					(reference "Q1")
 					(unit 1)
 				)
 			)
@@ -18370,15 +18277,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART #" "1276-1038-1-ND"
-			(at 207.01 30.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Digikey Part Number" "1276-1038-1-ND"
 			(at 207.01 30.48 0)
 			(effects
@@ -18450,15 +18348,6 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 257.81 30.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART #" "1276-1038-1-ND"
 			(at 257.81 30.48 0)
 			(effects
 				(font
@@ -18939,15 +18828,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART #" "399-C0603C104M5RACTUCT-ND"
-			(at 200.66 22.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Digikey Part Number" "399-C0603C104M5RACTUCT-ND"
 			(at 200.66 22.86 0)
 			(effects
@@ -19019,15 +18899,6 @@
 			)
 		)
 		(property "Description" "Single Pair Common Mode Filter with ESD Protection, UQFN-6L"
-			(at 152.4 161.29 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART #" "497-10773-1-ND"
 			(at 152.4 161.29 0)
 			(effects
 				(font
@@ -19901,15 +19772,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART NUMBER" "609-3825-ND"
-			(at 255.27 146.05 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(pin "1"
 			(uuid "0bda92ac-8f88-4b76-aa95-b4a2ff6c415e")
 		)
@@ -20000,15 +19862,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART #" "541-4030-1-ND"
-			(at 132.08 180.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Digikey Part Number" "541-4030-1-ND"
 			(at 132.08 180.34 90)
 			(effects
@@ -20080,15 +19933,6 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 119.38 110.49 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART #" "4713-CHV0603N2508R2BCT-ND"
 			(at 119.38 110.49 0)
 			(effects
 				(font
@@ -20624,15 +20468,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART #" "1276-1038-1-ND"
-			(at 245.11 30.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Digikey Part Number" "1276-1038-1-ND"
 			(at 245.11 30.48 0)
 			(effects
@@ -21002,15 +20837,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART #" "541-4030-1-ND"
-			(at 132.08 172.72 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Digikey Part Number" "541-4030-1-ND"
 			(at 132.08 172.72 0)
 			(effects
@@ -21155,15 +20981,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART #" "2073-USB4500-03-0-ACT-ND"
-			(at 135.89 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Digikey Part Number" "2073-USB4500-03-0-ACT-ND"
 			(at 135.89 140.97 0)
 			(effects
@@ -21274,15 +21091,6 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 148.59 25.4 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART #" "RMCF0603JT10K0CT-ND"
 			(at 148.59 25.4 0)
 			(effects
 				(font
@@ -21645,14 +21453,6 @@
 				)
 			)
 		)
-		(property "DIGIKEY PART #" ""
-			(at 90.17 181.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
 		(pin "1"
 			(uuid "7f80816e-062e-40dc-97aa-17a9f83fe408")
 		)
@@ -21724,15 +21524,6 @@
 			)
 		)
 		(property "Description" "Generic connectable mounting pin connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)"
-			(at 245.11 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART NUMBER" "609-3825-ND"
 			(at 245.11 88.9 0)
 			(effects
 				(font
@@ -21898,15 +21689,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART NUMBER" "DT1240A-08LP3810-7DICT-ND"
-			(at 259.08 113.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(pin "1"
 			(uuid "fe3e775a-da7a-44c8-9514-23d79fa23975")
 		)
@@ -21998,15 +21780,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART NUMBER" "1655-S1615-8CT-ND"
-			(at 261.62 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(pin "4"
 			(uuid "654c4f48-90ff-4c58-83ed-91193e89e8ca")
 		)
@@ -22065,6 +21838,116 @@
 		)
 	)
 	(symbol
+		(lib_name "NMOS_1")
+		(lib_id "Simulation_SPICE:NMOS")
+		(at 36.83 185.42 90)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "c2c54e14-1a8a-4a3b-a44e-2cd0a44ad946")
+		(property "Reference" "Q1"
+			(at 35.5599 191.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "NMOS"
+			(at 38.0999 191.77 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+			(at 34.29 190.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://ngspice.sourceforge.io/docs/ngspice-html-manual/manual.xhtml#cha_MOSFETs"
+			(at 49.53 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "N-MOSFET transistor, drain/source/gate"
+			(at 36.83 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "NMOS"
+			(at 53.975 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Type" "VDMOS"
+			(at 55.88 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=D 2=G 3=S"
+			(at 52.07 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Digikey Part Number" "BSS127H6327XTSA2CT-ND"
+			(at 36.83 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "b4e23a68-de42-4734-9feb-13faefa0f917")
+		)
+		(pin "3"
+			(uuid "756cc0a8-edf4-49b5-81e2-f4e64617a69f")
+		)
+		(pin "1"
+			(uuid "79686157-f3b1-407b-a9a2-24037a95db8a")
+		)
+		(instances
+			(project "distrabution_controler"
+				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/cc9feaf5-e3f6-4501-9fb5-0cfb07e51032"
+					(reference "Q1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 162.56 137.16 0)
 		(mirror y)
@@ -22112,15 +21995,6 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 162.56 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART #" "541-4026-1-ND"
 			(at 162.56 137.16 0)
 			(effects
 				(font
@@ -22208,15 +22082,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART #" "399-C0603C104M5RACTUCT-ND"
-			(at 213.36 22.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Digikey Part Number" "399-C0603C104M5RACTUCT-ND"
 			(at 213.36 22.86 0)
 			(effects
@@ -22288,15 +22153,6 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 238.76 22.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART #" "399-C0603C104M5RACTUCT-ND"
 			(at 238.76 22.86 0)
 			(effects
 				(font
@@ -22442,15 +22298,6 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 133.35 110.49 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART #" "4713-CHV0603N2508R2BCT-ND"
 			(at 133.35 110.49 0)
 			(effects
 				(font
@@ -23353,15 +23200,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART #" "1276-1038-1-ND"
-			(at 219.71 30.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Digikey Part Number" "1276-1038-1-ND"
 			(at 219.71 30.48 0)
 			(effects
@@ -23579,15 +23417,6 @@
 			)
 		)
 		(property "Description" "Microcontroller, Wi-Fi 802.11b/g/n, Bluetooth, 32bit"
-			(at 173.99 67.31 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART #" "1904-ESP32-S2FH2CT-ND"
 			(at 173.99 67.31 0)
 			(effects
 				(font
@@ -23840,15 +23669,6 @@
 				(hide yes)
 			)
 		)
-		(property "DIGIKEY PART #" "1276-1038-1-ND"
-			(at 232.41 30.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(property "Digikey Part Number" "1276-1038-1-ND"
 			(at 232.41 30.48 0)
 			(effects
@@ -23920,15 +23740,6 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 264.16 22.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "DIGIKEY PART #" "399-C0603C104M5RACTUCT-ND"
 			(at 264.16 22.86 0)
 			(effects
 				(font

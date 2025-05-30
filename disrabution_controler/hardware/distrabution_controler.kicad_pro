@@ -48,7 +48,7 @@
         "silk_text_thickness": 0.1,
         "silk_text_upright": false,
         "zones": {
-          "min_clearance": 0.5
+          "min_clearance": 0.2
         }
       },
       "diff_pair_dimensions": [
@@ -195,7 +195,8 @@
         0.0,
         0.0,
         0.2,
-        0.5
+        0.5,
+        18.0
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -622,6 +623,14 @@
       {
         "netclass": "IO",
         "pattern": "MT*"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "GND*"
+      },
+      {
+        "netclass": "RF",
+        "pattern": "LNA"
       }
     ]
   },
@@ -630,7 +639,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "GIRBER/",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",
@@ -730,12 +739,6 @@
         },
         {
           "group_by": false,
-          "label": "DIGIKEY PART #",
-          "name": "DIGIKEY PART #",
-          "show": false
-        },
-        {
-          "group_by": false,
           "label": "Description",
           "name": "Description",
           "show": false
@@ -744,12 +747,6 @@
           "group_by": false,
           "label": "#",
           "name": "${ITEM_NUMBER}",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "DIGIKEY PART NUMBER",
-          "name": "DIGIKEY PART NUMBER",
           "show": false
         }
       ],
