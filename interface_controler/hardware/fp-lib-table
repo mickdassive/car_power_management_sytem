@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "Library")(type "KiCad")(uri "/home/tokyo/Documents/car_power_management_sytem/disrabution_controler/hardware/LIBRARY/Library.pretty")(options "")(descr ""))
+)
