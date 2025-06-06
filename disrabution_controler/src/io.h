@@ -21,6 +21,7 @@
 #define io_h
 
 #include <Arduino.h>
+#include "adc.h"
 
 //iox defines
 const uint8_t iox_0_add = 0x20;
@@ -48,6 +49,25 @@ const uint8_t iox_int_stat_register_0 = 0x4c;
 const uint8_t iox_int_stat_register_1 = 0x4d;
 const uint8_t iox_out_port_config_register = 0x4f;
 
+//vars for chanel current limit in mA
+extern uint16_t ch1_current_limit;
+extern uint16_t ch2_current_limit;
+extern uint16_t ch3_current_limit;
+extern uint16_t ch4_current_limit;
+extern uint16_t ch5_current_limit;
+extern uint16_t ch6_current_limit;
+extern uint16_t ch7_current_limit;
+extern uint16_t ch8_current_limit;
+extern uint16_t ch9_current_limit;
+extern uint16_t ch10_current_limit;
+extern uint16_t ch11_current_limit;
+extern uint16_t ch12_current_limit;
+extern uint16_t ch13_current_limit;
+extern uint16_t ch14_current_limit;
+extern uint16_t ch15_current_limit;
+extern uint16_t ch16_current_limit;
+extern uint16_t peripheral_current_limit;
+
 //io_call struct setup
 enum in_out {
   in,        //input
@@ -64,20 +84,21 @@ struct pin {
   uint8_t mask;          //mask for iox
   int port;              //port on iox (can be 0 or 1 only)
                          //ECEPTION: i2c sda/scl defined by port 2 for sda and port 3 for scl
+  int pin_number;        //pin number, for ESP-12F: GPIO#, for iox: phisical pin#
   int adc_num;           //adc number (can be 1 or 2 only)
   int adc_channel;       //adc channel (can be 0-7 only)
-  int pin_number;        //pin number, for ESP-12F: GPIO#, for iox: phisical pin#
   in_out pin_mode;       //defines pinmode see enum above for deatails
   bool onboard;          //If true, IO is on ESP8266; if false, IO is on IO expander
-  void (*interrupt_handler)(); // Pointer to interrupt handler function (optional)
+  void (*interrupt_handler)(struct pin); // Pointer to interrupt handler function (optional)
+  uint16_t* chanel_curent_limit_pointer;  // pointer to the current limit for this channel, if not set it will be nullptr
 
 
 };
 //BE SURE TO ADD PINS TO BOTH THE "pin" STRUCT AND THE "pin_names" ARRAY THEY MUST MATCH
-//io_call struct defines  {mask, port, iox#, pin, pin_mode, onboard, interrupt_handler(optional)}
+//io_call struct defines  {mask, port, pin, pin_mode, onboard, interrupt_handler(optional)}
 static struct pin sda {0x00, 2, 2, -1, -1, i2c, true};
 static struct pin scl {0x00, 3, 3, -1, -1, i2c, true};
-static struct pin iox_0_int {0x00, -1, 1, -1, -1, intr, true, tbd};
+static struct pin iox_0_int {0x00, -1, 1, -1, -1, intr, true, nullptr};
 static struct pin car_acc {0x00, -1, 4, -1, -1, in, true};
 static struct pin peripheral_pwr_gate {0x00, -1, 5, -1, -1, out, true};
 static struct pin gpio_6 {0x00, -1, 6, -1, -1, in, true};
@@ -87,53 +108,53 @@ static struct pin gpio_9 {0x00, -1, 9, -1, -1, in, true};
 static struct pin gpio_10 {0x00, -1, 10, -1, -1, in, true};
 static struct pin gpio_11 {0x00, -1, 11, -1, -1, in, true};
 static struct pin gpio_12 {0x00, -1, 12, -1, -1, in, true};
-static struct pin peripheral_pwr_csn {0x00, -1, 13, -1, -1, analog_in, true};
+static struct pin peripheral_pwr_csn {0x00, -1, 13, -1, -1, analog_in, true, nullptr, &peripheral_current_limit};
 static struct pin ref_12v {0x00, -1, 14, -1, -1, analog_in, true};
 static struct pin dac_1 {0x00, -1, 15, -1, -1, analog_out, true};
 static struct pin dac_2 {0x00, -1, 16, -1, -1, analog_out, true};
 static struct pin usb_d_n {0x00, -1, 19, -1, -1, usb, true};
 static struct pin usb_d_p {0x00, -1, 20, -1, -1, usb, true};
 static struct pin disrabution_neo_pixels {0x00, -1, 21, -1, -1, out, true};
-static struct pin adc_1_alert {0x00, -1, 15, -1, -1, intr, true, tbd};
-static struct pin adc_2_alert {0x00, -1, 16, -1, -1, intr, true, tbd};
+static struct pin adc_1_alert {0x00, -1, 15, 1, -1, intr, true, adc_alert_handler};
+static struct pin adc_2_alert {0x00, -1, 16, 2, -1, intr, true, adc_alert_handler};
 static struct pin can_err {0x00, -1, 33, -1, -1, in, true};
 static struct pin can_wake {0x00,-1, 34, -1, -1, intr, true};
 static struct pin can_stb {0x00, -1, 35, -1, -1, out, true};
 static struct pin can_tx {0x00, -1, 36, -1, -1, out, true};
 static struct pin can_en {0x00, -1, 38, -1, -1, out, true};
 static struct pin can_rx {0x00, -1, 37, -1, -1, in, true};
-static struct pin ch1_gate {0x80, 0, 11, -1, -1, out, false};
-static struct pin ch2_gate {0x40, 0, 10, -1, -1, out, false};
-static struct pin ch3_gate {0x20, 0, 9, -1, -1, out, false};
-static struct pin ch4_gate {0x10, 0, 8, -1, -1, out, false};
-static struct pin ch5_gate {0x08, 0, 7, -1, -1, out, false};
-static struct pin ch6_gate {0x04, 0, 6, -1, -1, out, false};
-static struct pin ch7_gate {0x02, 0, 5, -1, -1, out, false};
-static struct pin ch8_gate {0x01, 0, 4, -1, -1, out, false};
-static struct pin ch9_gate {0x80, 1, 20, -1, -1, out, false};
-static struct pin ch10_gate {0x40, 1, 19, -1, -1, out, false};
-static struct pin ch11_gate {0x20, 1, 18, -1, -1, out, false};
-static struct pin ch12_gate {0x10, 1, 17, -1, -1, out, false};
-static struct pin ch13_gate {0x08, 1, 16, -1, -1, out, false};
-static struct pin ch14_gate {0x04, 1, 15, -1, -1, out, false};
-static struct pin ch15_gate {0x02, 1, 14, -1, -1, out, false};
-static struct pin ch16_gate {0x01, 1, 13, -1, -1, out, false};
-static struct pin ch1_csn {0x00, -1, 6, 1, 0, analog_in, false};
-static struct pin ch2_csn {0x00, -1, 5, 1, 1, analog_in, false};
-static struct pin ch3_csn {0x00, -1, 4, 1, 2, analog_in, false};
-static struct pin ch4_csn {0x00, -1, 3, 1, 3, analog_in, false};
-static struct pin ch5_csn {0x00, -1, 2, 1, 4, analog_in, false};
-static struct pin ch6_csn {0x00, -1, 1, 1, 5, analog_in, false};
-static struct pin ch7_csn {0x00, -1, 16, 1, 6, analog_in, false};
-static struct pin ch8_csn {0x00, -1, 15, 1, 7, analog_in, false};
-static struct pin ch9_csn {0x00, -1, 6, 2, 0, analog_in, false};
-static struct pin ch10_csn {0x00, -1, 5, 2, 1, analog_in, false};
-static struct pin ch11_csn {0x00, -1, 4, 2, 2, analog_in, false};
-static struct pin ch12_csn {0x00, -1, 3, 2, 3, analog_in, false};
-static struct pin ch13_csn {0x00, -1, 2, 2, 4, analog_in, false};
-static struct pin ch14_csn {0x00, -1, 1, 2, 5, analog_in, false};
-static struct pin ch15_csn {0x00, -1, 16, 2, 6, analog_in, false};
-static struct pin ch16_csn {0x00, -1, 15, 2, 7, analog_in, false};
+static struct pin ch1_gate {0x80, 0, 11, 1, 0, out, false};
+static struct pin ch2_gate {0x40, 0, 10, 1, 1, out, false};
+static struct pin ch3_gate {0x20, 0, 9, 1, 2, out, false};
+static struct pin ch4_gate {0x10, 0, 8, 1, 3, out, false};
+static struct pin ch5_gate {0x08, 0, 7, 1, 4, out, false};
+static struct pin ch6_gate {0x04, 0, 6, 1, 5, out, false};
+static struct pin ch7_gate {0x02, 0, 5, 1, 6, out, false};
+static struct pin ch8_gate {0x01, 0, 4, 1, 7, out, false};
+static struct pin ch9_gate {0x80, 1, 20, 2, 0, out, false};
+static struct pin ch10_gate {0x40, 1, 19, 2, 1, out, false};
+static struct pin ch11_gate {0x20, 1, 18, 2, 2, out, false};
+static struct pin ch12_gate {0x10, 1, 17, 2, 3, out, false};
+static struct pin ch13_gate {0x08, 1, 16, 2, 4, out, false};
+static struct pin ch14_gate {0x04, 1, 15, 2, 5, out, false};
+static struct pin ch15_gate {0x02, 1, 14, 2, 6, out, false};
+static struct pin ch16_gate {0x01, 1, 13, 2, 7, out, false};
+static struct pin ch1_csn {0x00, -1, 6, 1, 0, analog_in, false, nullptr, &ch1_current_limit};
+static struct pin ch2_csn {0x00, -1, 5, 1, 1, analog_in, false, nullptr, &ch2_current_limit};
+static struct pin ch3_csn {0x00, -1, 4, 1, 2, analog_in, false, nullptr, &ch3_current_limit};
+static struct pin ch4_csn {0x00, -1, 3, 1, 3, analog_in, false, nullptr, &ch4_current_limit};
+static struct pin ch5_csn {0x00, -1, 2, 1, 4, analog_in, false, nullptr, &ch5_current_limit};
+static struct pin ch6_csn {0x00, -1, 1, 1, 5, analog_in, false, nullptr, &ch6_current_limit};
+static struct pin ch7_csn {0x00, -1, 16, 1, 6, analog_in, false, nullptr, &ch7_current_limit};
+static struct pin ch8_csn {0x00, -1, 15, 1, 7, analog_in, false, nullptr, &ch8_current_limit};
+static struct pin ch9_csn {0x00, -1, 6, 2, 0, analog_in, false, nullptr, &ch9_current_limit};
+static struct pin ch10_csn {0x00, -1, 5, 2, 1, analog_in, false, nullptr, &ch10_current_limit};
+static struct pin ch11_csn {0x00, -1, 4, 2, 2, analog_in, false, nullptr, &ch11_current_limit};
+static struct pin ch12_csn {0x00, -1, 3, 2, 3, analog_in, false, nullptr, &ch12_current_limit};
+static struct pin ch13_csn {0x00, -1, 2, 2, 4, analog_in, false, nullptr, &ch13_current_limit};
+static struct pin ch14_csn {0x00, -1, 1, 2, 5, analog_in, false, nullptr, &ch14_current_limit};
+static struct pin ch15_csn {0x00, -1, 16, 2, 6, analog_in, false, nullptr, &ch15_current_limit};
+static struct pin ch16_csn {0x00, -1, 15, 2, 7, analog_in, false, nullptr, &ch16_current_limit};
 
  
 

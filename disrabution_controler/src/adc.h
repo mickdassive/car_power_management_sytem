@@ -201,17 +201,25 @@ enum adc_channel {
   empty
 };
 
+//chanel curent sence resistance in ohms
+const float adc_current_sense_resistance = 0.0066; // 6.6mOhm
 
 
 //function defines 
-void adc_self_cal ();
-void adc_init (bool fast_mode);
-void adc_threshold_set(enum adc_channel adc_channel, uint16_t high_th, uint16_t low_th);
-void adc_hysteresis_set(enum adc_channel adc_channel, uint8_t hysteresis_set);
-int adc_event_count_read(enum adc_channel adc_channel);
-void adc_event_clear(enum adc_channel adc_channel);
-int adc_read(enum adc_channel adc_channel);
-enum adc_channel adc_determine_alert_source();
-void adc_clear_event_flags();
+void adc_self_cal (uint8_t adc_add);
+void adc_init(bool fast_mode);
+void adc_threshold_set(struct pin pin_needed , uint16_t high_th, uint16_t low_th);
+void adc_hysteresis_set(struct pin pin_needed, uint8_t hysteresis_set);
+int adc_event_count_read(struct pin pin_needed);
+void adc_event_clear(struct pin pin_needed);
+int adc_read(struct pin pin_needed);
+void adc_clear_event_flags(int adc_num);
+struct pin adc_determine_alert_source(struct pin alert_pin);
+void adc_set_ch_current_limit(struct pin pin_needed, uint current_limit);
+int adc_read_ch_current (struct pin pin_needed);
+void IRAM_ATTR adc_alert_handler (struct pin alert_pin);
+void adc_monitor_periral_ch_current(void * parameter);
+
+
 
 #endif // adc_defines_h

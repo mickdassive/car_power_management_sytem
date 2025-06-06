@@ -868,35 +868,36 @@ void adc_clear_event_flags(int adc_num) {
   Wire.endTransmission();
 }
 
-
 /**
- * @brief Determines the source channel of an alert from the specified ADC.
+ * @brief Determines the source pin that triggered an ADC alert.
  *
- * This function communicates with the ADC device over I2C to read the event flag register,
- * which indicates which channel (if any) has triggered an alert. It returns the corresponding
- * enum value for the channel that caused the alert, or `empty` if no alert is present or if
- * an invalid ADC number is provided.
+ * This function reads the event flag register from the specified ADC (based on the adc_num in the input pin structure)
+ * to identify which channel caused the alert. It then searches through the list of pin structures to find and return
+ * the pin corresponding to the triggered channel.
  *
- * @param adc_num The ADC number to query (1 or 2).
- * @return enum adc_channel The channel that triggered the alert, or `empty` if none or invalid ADC number.
+ * @param alert_pin The pin structure containing at least the adc_num field to specify which ADC to query.
+ * @return struct pin The pin structure corresponding to the channel that triggered the alert.
+ *         If no valid source is found or adc_num is invalid, the function returns without a value.
  *
  * @note The function logs debug messages for tracing and error handling.
  */
-enum adc_channel adc_determine_alert_source(int adc_num) {
+struct pin adc_determine_alert_source(struct pin alert_pin) {
 
   debug_msg(partal_adc, "adc_determine_alert_source called", false, 0);
 
   //init local vars 
   uint8_t current_event_flag_register_value = 0;
   uint8_t adc_add = 0b0; // ADC address to be set based on adc_num
+  uint8_t test_mask = 0x01;
+  int chanel_index = 0;
 
-  if (adc_num == 1) {
+  if (alert_pin.adc_num == 1) {
     adc_add = adc_1_add; // Set the ADC address to the first ADC
-  } else if (adc_num == 2) {
+  } else if (alert_pin.adc_num == 2) {
     adc_add = adc_2_add; // Set the ADC address to the second ADC
   } else {
-    debug_msg(partal_adc, "adc_determine_alert_source called with invalid adc_num", false, adc_num);
-    return empty; // Invalid ADC number, exit the function
+    debug_msg(partal_adc, "adc_determine_alert_source called with invalid adc_num", false, alert_pin.adc_num);
+    return; // Invalid ADC number, exit the function
   }
 
   //read alert flag register
@@ -908,26 +909,205 @@ enum adc_channel adc_determine_alert_source(int adc_num) {
   current_event_flag_register_value = Wire.read();
   Wire.endTransmission();
 
-  if ((current_event_flag_register_value & 0x01) != 0) {
-    return ch0;
-  } else if ((current_event_flag_register_value & 0x02) != 0) {
-    return ch1;
-  } else if ((current_event_flag_register_value & 0x04) != 0) {
-    return ch2;
-  } else if ((current_event_flag_register_value & 0x08) != 0) {
-    return ch3;
-  } else if ((current_event_flag_register_value & 0x10) != 0) {
-    return ch4;
-  } else if ((current_event_flag_register_value & 0x20) != 0) {
-    return ch5;
-  } else if ((current_event_flag_register_value & 0x40) != 0) {
-    return ch6;
-  } else if ((current_event_flag_register_value & 0x80) != 0) {
-    return ch7;
+  //determine what chanel triggered the alert
+  for (int x; x <= 7; x++) {
+    if (current_event_flag_register_value & test_mask) {
+      chanel_index = x + 1; // Get the index of the channel that triggered the alert
+    }
+    test_mask <<= 1; // Shift the mask to check the next bit
+
   }
 
-  return empty;
+  for (size_t i = 1; i < sizeof(pin_names[0]); i++) {
+    if (pin_names[i]->pin_mode == analog_in) {
+      if (pin_names[i]->adc_num == alert_pin.adc_num) {
+        if (chanel_index == pin_names[i]->adc_channel) {
+          debug_msg(partal_adc, "adc_determine_alert_source complete", false, 0);
+          return *pin_names[i]; // Return the pin structure for the channel that triggered the alert
+
+        }
+      }
+
+    }
+  }
+
+  return;
 
 }
+
+/**
+ * @brief Sets the current limit for a specified ADC channel.
+ *
+ * This function sets the current limit for the given pin/channel. If the pin has an associated
+ * current limit pointer, the value is updated directly. For non-onboard pins, the function
+ * calculates the equivalent 12-bit ADC count for the specified current limit (in mA) and sets
+ * the ADC threshold accordingly.
+ *
+ * @param pin_needed The pin structure specifying the ADC channel and associated properties.
+ * @param current_limit The desired current limit in milliamperes (mA).
+ */
+void adc_set_ch_current_limit(struct pin pin_needed, uint current_limit) {
+
+  debug_msg(partal_adc, "adc_set_ch_current_limit called", false, 0);
+
+  if (pin_needed.chanel_curent_limit_pointer != nullptr) {
+    *(pin_needed.chanel_curent_limit_pointer) = current_limit; // Set the value pointed to by the pointer
+  }
+
+  if (!pin_needed.onboard) {
+    //calculate the current limit in 12 bit counts
+    uint16_t current_limit_counts = (uint16_t)((current_limit / 1000.0) * 4095.0); // Convert mA to counts (assuming 3.3V reference and 12-bit ADC)
+ 
+    //set threshold value for the channel
+    adc_threshold_set(pin_needed, current_limit_counts, 0); // Set the threshold with the calculated counts and a low threshold of 0
+  }
+
+  
+  return;
+}
+
+/**
+ * @brief Reads the current flowing through a specified channel using ADC measurements.
+ *
+ * This function measures the voltage drop across a shunt resistor and MOSFET to calculate
+ * the current in milliamperes (mA) for the given pin. It reads the supply voltage and the
+ * current sense (CSN) voltage, computes the voltage drop, and then calculates the current
+ * using Ohm's law.
+ *
+ * @param pin_needed The pin structure specifying the pin number and whether it is onboard.
+ * @return int The calculated current in milliamperes (mA).
+ *
+ * @note Assumes a 3.3V ADC reference and a 16-bit ADC resolution.
+ * @note Uses the global variable 'adc_current_sense_resistance' for the shunt resistor value.
+ */
+int adc_read_ch_current (struct pin pin_needed) {
+
+  debug_msg(partal_adc, "adc_read_ch_current called", false, 0);
+
+  //curent csn value
+  uint16_t current_csn_voltage_counts = 0;
+  float current_csn_voltage = 0;
+  uint16_t current_supply_voltage_counts = 0;
+  float current_supply_voltage = 0;
+  float v_drop = 0;
+  int current_mA = 0;
+
+  //read the curent supply voltage
+  current_supply_voltage_counts = (analogRead(pin_needed.pin_number)) << 4; // Read the analog value from the pin and map it to 16 bit
+  
+  //read the curent csn value
+  if (pin_needed.onboard) {
+    current_csn_voltage_counts = (analogRead(pin_needed.pin_number)) << 4; // Read the analog value from the pin and map it to 16 bit
+  } else {
+    current_csn_voltage_counts = adc_read(pin_needed); // Read the ADC value from the specified pin
+  }
+
+  //convert the counts to voltage
+  current_csn_voltage = ((float)current_csn_voltage_counts / 65535.0) * 3.3; // Convert counts to voltage (assuming 3.3V reference)
+  current_supply_voltage = ((float)current_supply_voltage_counts / 65535.0) * 3.3; // Convert counts to voltage (assuming 3.3V reference)
+
+  //subtract the csn voltage from the supply voltage to get the voltage drop across the shunt resistor & mosfet
+  v_drop = current_supply_voltage - current_csn_voltage;
+
+  //calculate the current in mA using the formula: I = V / R
+  current_mA = (int)((v_drop / adc_current_sense_resistance) * 1000.0); // Convert voltage drop to current in mA
+
+  debug_msg(partal_adc, "adc_read_ch_current complete with value", true, current_mA);
+
+  return current_mA; // Return the calculated current in mA
+
+}
+
+/**
+ * @brief Handles ADC alert events triggered by a specified alert pin.
+ *
+ * This function is called when an ADC alert is detected. It determines the source of the alert,
+ * finds the corresponding gate pin, checks if the alert source is in an overcurrent state,
+ * and takes appropriate action (such as disabling the gate pin and clearing the alert).
+ * Debug messages are logged throughout the process for diagnostic purposes.
+ *
+ * @param alert_pin The pin structure representing the alert pin that triggered the handler.
+ *
+ * @note This function assumes that the pin_names array and related structures are properly initialized.
+ *       It also assumes that the alert source's current limit pointer is valid.
+ */
+void IRAM_ATTR adc_alert_handler (struct pin alert_pin) {
+
+  debug_msg(partal_adc, "adc_alert_handler called", false, 0);
+
+  //determine the source of the alert
+  struct pin alert_source = adc_determine_alert_source(alert_pin);
+  debug_msg(partal_adc, "alert source found on pin:", true, alert_source.pin_number);
+  debug_msg(partal_adc, "on adc:", true, alert_source.adc_num);
+  debug_msg(partal_adc, "on channel:", true, alert_source.adc_channel);
+
+  //find gate pin for the alert source
+  struct pin gate_pin; // Declare gate_pin before the loop
+  for (size_t i = 1; i < sizeof(pin_names[0]); i++) {
+    if (pin_names[i]->pin_mode == out){
+      if (pin_names[i]->adc_num == alert_source.adc_num) {
+        if (pin_names[i]->adc_channel == alert_source.adc_channel) {
+          debug_msg(partal_adc, "gate pin found on pin:", true, pin_names[i]->pin_number);
+          gate_pin = *pin_names[i]; // Copy the gate pin structure
+          break; // Exit the loop once the gate pin is found
+        }
+      }
+    }
+  }
+    
+  //check if the alert soucrce is in over current state
+  if (adc_read_ch_current(alert_source) > *alert_source.chanel_curent_limit_pointer) {
+    debug_msg(partal_adc, "current limit exceeded on alerting channel", false, 0);
+    io_call(gate_pin, write, low);
+    adc_event_clear(alert_source); // Clear the alert for the source channel
+      
+  } else {
+    debug_msg(partal_adc, "current limit not exceeded on alert source", false, 0);
+  }
+
+  //call rtos follow up function
+
+
+  return;
+}
+
+/**
+ * @brief Checks the current on a peripheral power channel and disables the channel if the current exceeds a predefined limit.
+ *
+ * This function reads the current value from the specified ADC pin associated with a peripheral power channel.
+ * It compares the measured current (converted from ADC counts) to a user-defined current limit (in mA).
+ * If the measured current exceeds the limit, the function disables the peripheral power channel by calling
+ * the appropriate I/O function. Debug messages are logged throughout the process.
+ *
+ * No parameters or return value.
+ */
+void adc_monitor_periral_ch_current(void * parameter) {
+
+  debug_msg(partal_adc, "adc_check_periral_ch_current called", false, 0);
+
+  //vars
+  uint16_t curent_limit_in_counts = 0;
+
+  //calculate the current limit in 12 bit counts
+  curent_limit_in_counts = (uint16_t)(((*peripheral_pwr_csn.chanel_curent_limit_pointer) / 1000.0) * 4095.0); // Convert mA to counts (assuming 3.3V reference and 12-bit ADC)
+
+  for (;;) {
+    if (analogRead(peripheral_pwr_csn.pin_number) > curent_limit_in_counts) {
+      debug_msg(partal_adc, "current limit exceeded on peripheral power channel", false, 0);
+      io_call(peripheral_pwr_csn, write, low); // Disable the peripheral power channel
+
+    } else {
+      debug_msg(partal_adc, "current limit not exceeded on peripheral power channel", false, 0);
+    }
+
+    vTaskDelay(100 / portTICK_PERIOD_MS); // Delay for 100 milliseconds before the next check
+
+  }
+  
+
+  return;
+}
+
+
 
 #endif // adc_cpp

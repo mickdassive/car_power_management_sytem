@@ -12,11 +12,23 @@ void setup() {
   // init gpio and adc
   io_gpio_init();
   adc_init(true);
-  
+
+  //rtos task setup
+  xTaskCreate(
+    adc_monitor_periral_ch_current, // Task function
+    "task for checking if the peripheral power bus is in over current", // Name of the task
+    2048, // Stack size in words
+    NULL, // Task parameters
+    1, // Task priority
+    NULL, // Task handle
+  )
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  //
+
+
+
 }
 
 // put function definitions here:

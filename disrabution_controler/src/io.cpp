@@ -7,6 +7,25 @@
 #include "DEBUG.h"
 #include "adc.h"
 
+//vars for chanel current limit in mA
+uint16_t ch1_current_limit = 1000;
+uint16_t ch2_current_limit = 1000;
+uint16_t ch3_current_limit = 1000;
+uint16_t ch4_current_limit = 1000;
+uint16_t ch5_current_limit = 1000;
+uint16_t ch6_current_limit = 1000;
+uint16_t ch7_current_limit = 1000;
+uint16_t ch8_current_limit = 1000;
+uint16_t ch9_current_limit = 1000;
+uint16_t ch10_current_limit = 1000;
+uint16_t ch11_current_limit = 1000;
+uint16_t ch12_current_limit = 1000;
+uint16_t ch13_current_limit = 1000;
+uint16_t ch14_current_limit = 1000;
+uint16_t ch15_current_limit = 1000;
+uint16_t ch16_current_limit = 1000;
+uint16_t peripheral_current_limit = 1000;
+
 //iox interrupt register values
 uint8_t iox_0_port_0_interrupt = 0xFF;
 uint8_t iox_0_port_1_interrupt = 0xFF;
@@ -207,7 +226,13 @@ void io_gpio_init() {
     case intr: //setup interrupts for checking when io state is changed
       if (pin_names[i]->onboard) {
         pinMode(pin_names[i]->pin_number, INPUT_PULLUP);
-        attachInterrupt(digitalPinToInterrupt(pin_names[i]->pin_number), pin_names[i]->interrupt_handler, FALLING);
+        // Wrapper function for interrupt handler
+        void interrupt_wrapper() {
+            if (pin_names[i]->interrupt_handler) {
+                pin_names[i]->interrupt_handler(*pin_names[i]);
+            }
+        }
+                attachInterrupt(digitalPinToInterrupt(pin_names[i]->pin_number), interrupt_wrapper, FALLING);
 
       }
       //no need to do anything to the iox, all pins are being used as outputs
