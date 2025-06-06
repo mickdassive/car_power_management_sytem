@@ -20,8 +20,8 @@ void setup() {
     2048, // Stack size in words
     NULL, // Task parameters
     1, // Task priority
-    NULL, // Task handle
-  )
+    NULL // Task handle
+  );
 }
 
 void loop() {

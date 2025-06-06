@@ -37,7 +37,7 @@
  */
 void adc_self_cal (uint8_t adc_add) {
 
-  debug_msg(partal_adc, "adc_self_cal called beginnign selfcal seqwince", false, 0);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_self_cal called beginnign selfcal seqwince", false, 0);
 
   // Local variables
   bool cal_complete = false;
@@ -72,7 +72,7 @@ void adc_self_cal (uint8_t adc_add) {
     }
   }
 
-  debug_msg(partal_adc, "self cal complete", false, 0);
+  debug_msg(DEBUG_PARTAL_ADC, "self cal complete", false, 0);
 
   return;
 }
@@ -91,7 +91,7 @@ void adc_self_cal (uint8_t adc_add) {
  */
 void adc_init(bool fast_mode) {
 
-  debug_msg(partal_adc, "adc_init called, beiging setup, fast mode=", true, fast_mode);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_init called, beiging setup, fast mode=", true, fast_mode);
 
   // Initialize local variables
   uint8_t ch0_hysteresis = 0b0;
@@ -340,7 +340,7 @@ void adc_init(bool fast_mode) {
     }
   }
 
-  debug_msg(partal_adc, "adc init complete", false, 0);
+  debug_msg(DEBUG_PARTAL_ADC, "adc init complete", false, 0);
 
   return;
 }
@@ -365,7 +365,7 @@ void adc_init(bool fast_mode) {
  */
 void adc_threshold_set(struct pin pin_needed , uint16_t high_th, uint16_t low_th) {
 
-  debug_msg(partal_adc, "adc_threshold_set called setting threshold for follwoing channel", true, adc_channel);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_threshold_set called", false, 0);
 
   //init local vars
   uint8_t chx_hysteresis = 0b0;
@@ -382,7 +382,7 @@ void adc_threshold_set(struct pin pin_needed , uint16_t high_th, uint16_t low_th
   } else if (pin_needed.adc_num == 2) {
     adc_add = adc_2_add; // Set the ADC address to the second ADC
   } else {
-    debug_msg(partal_adc, "adc_threshold_set called with invalid adc_num", false, pin_needed.adc_num);
+    debug_msg(DEBUG_PARTAL_ADC, "adc_threshold_set called with invalid adc_num", false, pin_needed.adc_num);
     return; // Invalid ADC number, exit the function
   }
 
@@ -417,7 +417,7 @@ void adc_threshold_set(struct pin pin_needed , uint16_t high_th, uint16_t low_th
       Wire.write(adc_ch7_hysteresis);
       break;
     default:
-      debug_msg(partal_adc, "adc_threshold_set called with invalid adc_channel", false, pin_needed.adc_channel);
+      debug_msg(DEBUG_PARTAL_ADC, "adc_threshold_set called with invalid adc_channel", false, pin_needed.adc_channel);
     break; // Invalid ADC channel, exit the function
   }
   Wire.endTransmission();
@@ -465,7 +465,7 @@ void adc_threshold_set(struct pin pin_needed , uint16_t high_th, uint16_t low_th
       Wire.write(adc_ch7_hysteresis);
       break;
     default:
-      debug_msg(partal_adc, "adc_threshold_set called with invalid adc_channel", false, pin_needed.adc_channel);
+      debug_msg(DEBUG_PARTAL_ADC, "adc_threshold_set called with invalid adc_channel", false, pin_needed.adc_channel);
     break; // Invalid ADC channel, exit the function
   }
   Wire.write(chx_hysteresis);
@@ -474,11 +474,11 @@ void adc_threshold_set(struct pin pin_needed , uint16_t high_th, uint16_t low_th
   Wire.write(chx_low_th);
   Wire.endTransmission();
 
-  debug_msg(partal_adc, "threshold set complete", false, 0);
-  debug_msg(partal_adc, "high threshold set to", true, high_th);
-  debug_msg(partal_adc, "low threshold set to", true, low_th);
-  debug_msg(partal_adc, "on adc:", true, pin_needed.adc_num);
-  debug_msg(partal_adc, "on channel:", true, pin_needed.adc_channel);
+  debug_msg(DEBUG_PARTAL_ADC, "threshold set complete", false, 0);
+  debug_msg(DEBUG_PARTAL_ADC, "high threshold set to", true, high_th);
+  debug_msg(DEBUG_PARTAL_ADC, "low threshold set to", true, low_th);
+  debug_msg(DEBUG_PARTAL_ADC, "on adc:", true, pin_needed.adc_num);
+  debug_msg(DEBUG_PARTAL_ADC, "on channel:", true, pin_needed.adc_channel);
 
   return;
 
@@ -502,7 +502,7 @@ void adc_threshold_set(struct pin pin_needed , uint16_t high_th, uint16_t low_th
  */
 void adc_hysteresis_set(struct pin pin_needed, uint8_t hysteresis_set) {
 
-  debug_msg(partal_adc, "adc_histerisis_set called", false, 0);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_histerisis_set called", false, 0);
 
   //init local vars
   uint8_t current_hysteresis_reg_val = 0x00;
@@ -547,7 +547,7 @@ void adc_hysteresis_set(struct pin pin_needed, uint8_t hysteresis_set) {
       Wire.write(adc_ch7_hysteresis);
       break;
     default:
-      debug_msg(partal_adc, "adc_threshold_set called with invalid adc_channel", false, pin_needed.adc_channel);
+      debug_msg(DEBUG_PARTAL_ADC, "adc_threshold_set called with invalid adc_channel", false, pin_needed.adc_channel);
     break; // Invalid ADC channel, exit the function
   }
 
@@ -590,14 +590,14 @@ void adc_hysteresis_set(struct pin pin_needed, uint8_t hysteresis_set) {
       Wire.write(adc_ch7_hysteresis);
       break;
     default:
-      debug_msg(partal_adc, "adc_threshold_set called with invalid adc_channel", false, pin_needed.adc_channel);
+      debug_msg(DEBUG_PARTAL_ADC, "adc_threshold_set called with invalid adc_channel", false, pin_needed.adc_channel);
     break; // Invalid ADC channel, exit the function
   }
   
   Wire.write(chx_hysteresis);
   Wire.endTransmission();
 
-  debug_msg(partal_adc, "histarisis set complete", false, 0);
+  debug_msg(DEBUG_PARTAL_ADC, "histarisis set complete", false, 0);
 
   return;
 
@@ -624,7 +624,7 @@ void adc_hysteresis_set(struct pin pin_needed, uint8_t hysteresis_set) {
  */
 int adc_event_count_read(struct pin pin_needed) {
 
-  debug_msg(partal_adc, "adc_event_count_read called, for channel", true, adc_channel);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_event_count_read called", false, 0);
 
   //init local vars 
   uint8_t chx_current_event_count = 0x00;
@@ -635,7 +635,7 @@ int adc_event_count_read(struct pin pin_needed) {
   } else if (pin_needed.adc_num == 2) {
     adc_add = adc_2_add; // Set the ADC address to the second ADC
   } else {
-    debug_msg(partal_adc, "adc_event_count_read called with invalid adc_num", false, pin_needed.adc_num);
+    debug_msg(DEBUG_PARTAL_ADC, "adc_event_count_read called with invalid adc_num", false, pin_needed.adc_num);
     return -1; // Invalid ADC number, exit the function
   }
 
@@ -668,7 +668,7 @@ int adc_event_count_read(struct pin pin_needed) {
       Wire.write(adc_event_count_ch7);
       break;
     default:
-      debug_msg(partal_adc, "adc_threshold_set called with invalid adc_channel", false, pin_needed.adc_channel);
+      debug_msg(DEBUG_PARTAL_ADC, "adc_threshold_set called with invalid adc_channel", false, pin_needed.adc_channel);
     break; // Invalid ADC channel, exit the function
   }
   Wire.endTransmission();
@@ -676,7 +676,7 @@ int adc_event_count_read(struct pin pin_needed) {
   Wire.requestFrom(adc_add, 1);
   chx_current_event_count = (Wire.read() & 0x0F);
 
-  debug_msg(partal_adc, "event count read complete with value", true, chx_current_event_count);
+  debug_msg(DEBUG_PARTAL_ADC, "event count read complete with value", true, chx_current_event_count);
 
   return chx_current_event_count;
 }
@@ -694,7 +694,7 @@ int adc_event_count_read(struct pin pin_needed) {
  */
 void IRAM_ATTR adc_event_clear(struct pin pin_needed) {
 
-  debug_msg(partal_adc, "adc_event_clear, called for channel", true, adc_channel);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_event_clear called", false, 0);
 
   //init local vars
   uint8_t event_count_value = 0x00;
@@ -705,7 +705,7 @@ void IRAM_ATTR adc_event_clear(struct pin pin_needed) {
   } else if (pin_needed.adc_num == 2) {
     adc_add = adc_2_add; // Set the ADC address to the second ADC
   } else {
-    debug_msg(partal_adc, "adc_event_clear called with invalid adc_num", false, pin_needed.adc_num);
+    debug_msg(DEBUG_PARTAL_ADC, "adc_event_clear called with invalid adc_num", false, pin_needed.adc_num);
     return; // Invalid ADC number, exit the function
   }
 
@@ -738,13 +738,13 @@ void IRAM_ATTR adc_event_clear(struct pin pin_needed) {
       Wire.write(adc_event_count_ch7);
       break;
     default:
-      debug_msg(partal_adc, "adc_threshold_set called with invalid adc_channel", false, pin_needed.adc_channel);
+      debug_msg(DEBUG_PARTAL_ADC, "adc_threshold_set called with invalid adc_channel", false, pin_needed.adc_channel);
     break; // Invalid ADC channel, exit the function
   }
   Wire.write(event_count_value);
   Wire.endTransmission();
 
-  debug_msg(partal_adc, "event cleard", false, 0);
+  debug_msg(DEBUG_PARTAL_ADC, "event cleard", false, 0);
   
   return;
 
@@ -770,7 +770,7 @@ void IRAM_ATTR adc_event_clear(struct pin pin_needed) {
  */
 int adc_read(struct pin pin_needed) {
 
-  debug_msg(partal_adc, "adc_read called, for channel", true, adc_channel);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_read called", false, 0);
 
   //init local vars
   uint16_t read_word = 0x0000;
@@ -781,7 +781,7 @@ int adc_read(struct pin pin_needed) {
   } else if (pin_needed.adc_num == 2) {
     adc_add = adc_2_add; // Set the ADC address to the second ADC
   } else {
-    debug_msg(partal_adc, "adc_read called with invalid adc_num", false, pin_needed.adc_num);
+    debug_msg(DEBUG_PARTAL_ADC, "adc_read called with invalid adc_num", false, pin_needed.adc_num);
     return -1; // Invalid ADC number, exit the function
   }
 
@@ -806,7 +806,7 @@ int adc_read(struct pin pin_needed) {
       Wire.write(adc_recent_ch4_lsb);
       break;
     case 5:
-      Wire.write(adc_recent_ch5_lsb;
+      Wire.write(adc_recent_ch5_lsb);
       break;
     case 6:
       Wire.write(adc_recent_ch6_lsb);
@@ -815,7 +815,7 @@ int adc_read(struct pin pin_needed) {
       Wire.write(adc_recent_ch7_lsb);
       break;
     default:
-      debug_msg(partal_adc, "adc_threshold_set called with invalid adc_channel", false, pin_needed.adc_channel);
+      debug_msg(DEBUG_PARTAL_ADC, "adc_threshold_set called with invalid adc_channel", false, pin_needed.adc_channel);
     break; // Invalid ADC channel, exit the function
   }
   
@@ -826,7 +826,7 @@ int adc_read(struct pin pin_needed) {
   read_word |= (Wire.read() << 8); // Read the MSB and combine with LSB
   Wire.endTransmission();
 
-  debug_msg(partal_adc, "adc read complete, with count", true, read_word);
+  debug_msg(DEBUG_PARTAL_ADC, "adc read complete, with count", true, read_word);
 
   return read_word;
 
@@ -847,7 +847,7 @@ int adc_read(struct pin pin_needed) {
  */
 void adc_clear_event_flags(int adc_num) {
 
-  debug_msg(partal_adc, "adc_clear_event_flags called", false, 0);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_clear_event_flags called", false, 0);
 
   //init local vars
   uint8_t adc_add = 0b0; // ADC address to be set based on adc_num
@@ -857,7 +857,7 @@ void adc_clear_event_flags(int adc_num) {
   } else if (adc_num == 2) {
     adc_add = adc_2_add; // Set the ADC address to the second ADC
   } else {
-    debug_msg(partal_adc, "adc_clear_event_flags called with invalid adc_num", false, adc_num);
+    debug_msg(DEBUG_PARTAL_ADC, "adc_clear_event_flags called with invalid adc_num", false, adc_num);
     return; // Invalid ADC number, exit the function
   }
 
@@ -883,7 +883,7 @@ void adc_clear_event_flags(int adc_num) {
  */
 struct pin adc_determine_alert_source(struct pin alert_pin) {
 
-  debug_msg(partal_adc, "adc_determine_alert_source called", false, 0);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_determine_alert_source called", false, 0);
 
   //init local vars 
   uint8_t current_event_flag_register_value = 0;
@@ -896,8 +896,7 @@ struct pin adc_determine_alert_source(struct pin alert_pin) {
   } else if (alert_pin.adc_num == 2) {
     adc_add = adc_2_add; // Set the ADC address to the second ADC
   } else {
-    debug_msg(partal_adc, "adc_determine_alert_source called with invalid adc_num", false, alert_pin.adc_num);
-    return; // Invalid ADC number, exit the function
+    debug_msg(DEBUG_PARTAL_ADC, "adc_determine_alert_source called with invalid adc_num", false, alert_pin.adc_num);
   }
 
   //read alert flag register
@@ -922,7 +921,7 @@ struct pin adc_determine_alert_source(struct pin alert_pin) {
     if (pin_names[i]->pin_mode == analog_in) {
       if (pin_names[i]->adc_num == alert_pin.adc_num) {
         if (chanel_index == pin_names[i]->adc_channel) {
-          debug_msg(partal_adc, "adc_determine_alert_source complete", false, 0);
+          debug_msg(DEBUG_PARTAL_ADC, "adc_determine_alert_source complete", false, 0);
           return *pin_names[i]; // Return the pin structure for the channel that triggered the alert
 
         }
@@ -930,8 +929,6 @@ struct pin adc_determine_alert_source(struct pin alert_pin) {
 
     }
   }
-
-  return;
 
 }
 
@@ -948,7 +945,7 @@ struct pin adc_determine_alert_source(struct pin alert_pin) {
  */
 void adc_set_ch_current_limit(struct pin pin_needed, uint current_limit) {
 
-  debug_msg(partal_adc, "adc_set_ch_current_limit called", false, 0);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_set_ch_current_limit called", false, 0);
 
   if (pin_needed.chanel_curent_limit_pointer != nullptr) {
     *(pin_needed.chanel_curent_limit_pointer) = current_limit; // Set the value pointed to by the pointer
@@ -989,12 +986,12 @@ void adc_set_ch_current_limit(struct pin pin_needed, uint current_limit) {
  */
 int IRAM_ATTR adc_read_ch_current (struct pin pin_needed) {
 
-  debug_msg(partal_adc, "adc_read_ch_current called", false, 0);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_read_ch_current called", false, 0);
 
   //curent csn value
   uint16_t current_csn_voltage_counts = 0;
   float current_csn_voltage = 0;
-  flaot csn_min_voltage = 0;
+  float csn_min_voltage = 0;
   uint16_t current_supply_voltage_counts = 0;
   float current_supply_voltage = 0;
   float v_drop = 0;
@@ -1023,7 +1020,7 @@ int IRAM_ATTR adc_read_ch_current (struct pin pin_needed) {
   //calculate the current in mA using the formula: I = V / R
   current_mA = (int)((v_drop / adc_current_sense_resistance) * 1000.0); // Convert voltage drop to current in mA
 
-  debug_msg(partal_adc, "adc_read_ch_current complete with value", true, current_mA);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_read_ch_current complete with value", true, current_mA);
 
   return current_mA; // Return the calculated current in mA
 
@@ -1044,13 +1041,13 @@ int IRAM_ATTR adc_read_ch_current (struct pin pin_needed) {
  */
 void IRAM_ATTR adc_alert_handler (struct pin alert_pin) {
 
-  debug_msg(partal_adc, "adc_alert_handler called", false, 0);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_alert_handler called", false, 0);
 
   //determine the source of the alert
   struct pin alert_source = adc_determine_alert_source(alert_pin);
-  debug_msg(partal_adc, "alert source found on pin:", true, alert_source.pin_number);
-  debug_msg(partal_adc, "on adc:", true, alert_source.adc_num);
-  debug_msg(partal_adc, "on channel:", true, alert_source.adc_channel);
+  debug_msg(DEBUG_PARTAL_ADC, "alert source found on pin:", true, alert_source.pin_number);
+  debug_msg(DEBUG_PARTAL_ADC, "on adc:", true, alert_source.adc_num);
+  debug_msg(DEBUG_PARTAL_ADC, "on channel:", true, alert_source.adc_channel);
 
   //find gate pin for the alert source
   struct pin gate_pin; // Declare gate_pin before the loop
@@ -1058,7 +1055,7 @@ void IRAM_ATTR adc_alert_handler (struct pin alert_pin) {
     if (pin_names[i]->pin_mode == out){
       if (pin_names[i]->adc_num == alert_source.adc_num) {
         if (pin_names[i]->adc_channel == alert_source.adc_channel) {
-          debug_msg(partal_adc, "gate pin found on pin:", true, pin_names[i]->pin_number);
+          debug_msg(DEBUG_PARTAL_ADC, "gate pin found on pin:", true, pin_names[i]->pin_number);
           gate_pin = *pin_names[i]; // Copy the gate pin structure
           break; // Exit the loop once the gate pin is found
         }
@@ -1068,12 +1065,12 @@ void IRAM_ATTR adc_alert_handler (struct pin alert_pin) {
     
   //check if the alert soucrce is in over current state
   if (adc_read_ch_current(alert_source) > *alert_source.chanel_curent_limit_pointer) {
-    debug_msg(partal_adc, "current limit exceeded on alerting channel", false, 0);
-    io_call(gate_pin, write, low);
+    debug_msg(DEBUG_PARTAL_ADC, "current limit exceeded on alerting channel", false, 0);
+    io_call(gate_pin, WRITE, low);
     adc_event_clear(alert_source); // Clear the alert for the source channel
       
   } else {
-    debug_msg(partal_adc, "current limit not exceeded on alert source", false, 0);
+    debug_msg(DEBUG_PARTAL_ADC, "current limit not exceeded on alert source", false, 0);
   }
 
   //call rtos follow up function
@@ -1094,17 +1091,17 @@ void IRAM_ATTR adc_alert_handler (struct pin alert_pin) {
  */
 void adc_monitor_periral_ch_current(void * parameter) {
 
-  debug_msg(partal_adc, "adc_check_periral_ch_current called", false, 0);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_check_periral_ch_current called", false, 0);
 
   //vars
   float voltage_drop = 0.0;
   float reference_voltage = 0.0; // Reference voltage for the ADC
-  flaot min_csn_voltage = 0.0; // Minimum CSN voltage for the current limit
+  float min_csn_voltage = 0.0; // Minimum CSN voltage for the current limit
   int current_csn_voltage_counts = 0; // Current CSN voltage in counts
   float ciurrent_csn_voltage = 0.0; // Current CSN voltage in volts
 
   //calculate the voltage drop across the shunt resistor and MOSFET
-  voltage_drop = peripheral_pwr_csn.chanel_curent_limit_pointer * adc_current_sense_resistance; // Calculate the voltage drop across the shunt resistor and MOSFET
+  voltage_drop = (*(peripheral_pwr_csn.chanel_curent_limit_pointer)) * adc_current_sense_resistance; // Calculate the voltage drop across the shunt resistor and MOSFET
 
   //read the reference voltage for the ADC
   reference_voltage = ((analogRead(peripheral_pwr_csn.pin_number) / 4095.0) * 3.3) * 5; // Convert the ADC reading to voltage (assuming 12-bit ADC and 3.3V reference)
@@ -1120,11 +1117,11 @@ void adc_monitor_periral_ch_current(void * parameter) {
     ciurrent_csn_voltage = (((float)current_csn_voltage_counts / 4095.0) * 3.3) * 5; // Convert counts to voltage (assuming 12-bit ADC and 3.3V reference)
 
     if (ciurrent_csn_voltage < min_csn_voltage) {
-      debug_msg(partal_adc, "current limit exceeded on peripheral power channel", false, 0);
-      io_call(peripheral_pwr_csn, write, low); // Disable the peripheral power channel
+      debug_msg(DEBUG_PARTAL_ADC, "current limit exceeded on peripheral power channel", false, 0);
+      io_call(peripheral_pwr_csn, WRITE, low); // Disable the peripheral power channel
 
     } else {
-      debug_msg(partal_adc, "current limit not exceeded on peripheral power channel", false, 0);
+      debug_msg(DEBUG_PARTAL_ADC, "current limit not exceeded on peripheral power channel", false, 0);
     }
 
     vTaskDelay(100 / portTICK_PERIOD_MS); // Delay for 100 milliseconds before the next check

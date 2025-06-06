@@ -224,8 +224,8 @@ static struct pin* pin_names[] = {
 
 //read write enum define for io_call function
 enum read_write {
-  read,
-  write
+  READ,
+  WRITE
 };
 
 //io_call high low input enum
@@ -236,7 +236,7 @@ enum high_low {
 };
 
 //function defines
-uint8_t io_read_current_io_state(u_int8_t port, u_int8_t iox_num);
+uint8_t io_read_current_io_state(uint8_t port);
 int io_call(struct pin pin_needed, enum read_write read_write, enum high_low high_low);
 void io_gpio_init();
 

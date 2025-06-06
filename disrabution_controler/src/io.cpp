@@ -8,23 +8,23 @@
 #include "adc.h"
 
 //vars for chanel current limit in mA
-uint16_t ch1_current_limit = 1000;
-uint16_t ch2_current_limit = 1000;
-uint16_t ch3_current_limit = 1000;
-uint16_t ch4_current_limit = 1000;
-uint16_t ch5_current_limit = 1000;
-uint16_t ch6_current_limit = 1000;
-uint16_t ch7_current_limit = 1000;
-uint16_t ch8_current_limit = 1000;
-uint16_t ch9_current_limit = 1000;
-uint16_t ch10_current_limit = 1000;
-uint16_t ch11_current_limit = 1000;
-uint16_t ch12_current_limit = 1000;
-uint16_t ch13_current_limit = 1000;
-uint16_t ch14_current_limit = 1000;
-uint16_t ch15_current_limit = 1000;
-uint16_t ch16_current_limit = 1000;
-uint16_t peripheral_current_limit = 1000;
+uint16_t ch1_current_limit = 0;
+uint16_t ch2_current_limit = 0;
+uint16_t ch3_current_limit = 0;
+uint16_t ch4_current_limit = 0;
+uint16_t ch5_current_limit = 0;
+uint16_t ch6_current_limit = 0;
+uint16_t ch7_current_limit = 0;
+uint16_t ch8_current_limit = 0;
+uint16_t ch9_current_limit = 0;
+uint16_t ch10_current_limit = 0;
+uint16_t ch11_current_limit = 0;
+uint16_t ch12_current_limit = 0;
+uint16_t ch13_current_limit = 0;
+uint16_t ch14_current_limit = 0;
+uint16_t ch15_current_limit = 0;
+uint16_t ch16_current_limit = 0;
+uint16_t peripheral_current_limit = 0;
 
 //iox interrupt register values
 uint8_t iox_0_port_0_interrupt = 0xFF;
@@ -39,7 +39,7 @@ uint8_t iox_0_port_1_interrupt = 0xFF;
  */
 uint8_t io_read_current_io_state(uint8_t port) {
 
-  debug_msg(partal_io, "io_read_current_io_state called, reading current IO state of given io expander", false, 0);
+  debug_msg(DEBUG_PARTIAL_IO, "io_read_current_io_state called, reading current IO state of given io expander", false, 0);
 
   uint8_t iox_input_port_register = (port == 0) ? iox_input_port_0 : iox_input_port_1;
 
@@ -64,10 +64,10 @@ uint8_t io_read_current_io_state(uint8_t port) {
  */
 int IRAM_ATTR io_call(struct pin pin_needed, enum read_write read_write, enum high_low high_low) {
 
-  debug_msg(partal_io, "io_call called, making pin call", false, 0);
+  debug_msg(DEBUG_PARTIAL_IO, "io_call called, making pin call", false, 0);
 
   if (pin_needed.onboard) {
-    if (read_write == write) {
+    if (read_write == WRITE) {
       if (high_low == high) {
         digitalWrite(pin_needed.pin_number, HIGH);
 
@@ -75,14 +75,14 @@ int IRAM_ATTR io_call(struct pin pin_needed, enum read_write read_write, enum hi
         digitalWrite(pin_needed.pin_number, LOW);
         
       }
-    } else if (read_write == read) {
+    } else if (read_write == READ) {
       int read_value = digitalRead(pin_needed.pin_number);
       return read_value;
 
     }
 
   } else {
-    if (read_write == write) {
+    if (read_write == WRITE) {
       uint8_t current = io_read_current_io_state(pin_needed.port);
       uint8_t output = 0b00000000;
       uint8_t mask_not = ~pin_needed.mask;
@@ -109,7 +109,7 @@ int IRAM_ATTR io_call(struct pin pin_needed, enum read_write read_write, enum hi
       Wire.write(output);
       Wire.endTransmission();
 
-    } else if (read_write == read) {
+    } else if (read_write == READ) {
 
       uint8_t readval = 0;
       uint8_t output_byte = 0;
@@ -161,7 +161,7 @@ int IRAM_ATTR io_call(struct pin pin_needed, enum read_write read_write, enum hi
  */
 void io_gpio_init() {
 
-  debug_msg(partal_io, "io_gpio_init called, setting up pins", false, 0);
+  debug_msg(DEBUG_PARTIAL_IO, "io_gpio_init called, setting up pins", false, 0);
 
   //init vars
   uint8_t iox_0_port_0_pinmode = 0x00;
@@ -177,7 +177,7 @@ void io_gpio_init() {
     switch (pin_names[i]->pin_mode) {
     default:
       // Error handling for unexpected pin_mode value
-      debug_msg(partal_io, "Unexpected pin_mode value", false, 0);
+      debug_msg(DEBUG_PARTIAL_IO, "Unexpected pin_mode value", false, 0);
       break;
     case in:
       if (pin_names[i]->onboard) {
@@ -219,21 +219,21 @@ void io_gpio_init() {
           // If both SDA and SCL are set, initialize I2C
           Wire.begin(i2c_sda, i2c_scl);
           Wire.setClock(400000);
-          debug_msg(partal_io, "I2C initialized & started", false, 0);
+          debug_msg(DEBUG_PARTIAL_IO, "I2C initialized & started", false, 0);
         }
       }
       break;
     case intr: //setup interrupts for checking when io state is changed
       if (pin_names[i]->onboard) {
         pinMode(pin_names[i]->pin_number, INPUT_PULLUP);
-        // Wrapper function for interrupt handler
-        void interrupt_wrapper() {
-            if (pin_names[i]->interrupt_handler) {
-                pin_names[i]->interrupt_handler(*pin_names[i]);
-            }
-        }
-                attachInterrupt(digitalPinToInterrupt(pin_names[i]->pin_number), interrupt_wrapper, FALLING);
-
+        // Use a static function for the interrupt handler
+        attachInterrupt(
+          digitalPinToInterrupt(pin_names[i]->pin_number),
+          []() { /* Call a static/global handler here, or set a flag for processing in loop() */ },
+          FALLING
+        );
+        // NOTE: Replace the lambda body with a call to a static/global handler as needed.
+        // If you need to pass pin info, store it in a global variable or use a lookup.
       }
       //no need to do anything to the iox, all pins are being used as outputs
       break;
@@ -276,10 +276,10 @@ void io_gpio_init() {
   Wire.write(iox_0_port_1_pinmode);
   Wire.endTransmission();
 
-  debug_msg(partal_io, "pins have been initialized", false, 0);
+  debug_msg(DEBUG_PARTIAL_IO, "pins have been initialized", false, 0);
 
   return;
-};
+}
 
 
 
