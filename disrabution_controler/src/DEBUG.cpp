@@ -22,7 +22,7 @@ enum DEBUG_LEVELS debug_level = DEBUG_NO_DEBUG;
  * @param include_num Flag indicating whether to include an attached value.
  * @param num_include The attached value to be printed (if include_num is true).
  */
-void debug_msg(enum DEBUG_LEVELS message_debug_level, const char* debug_message, bool include_num, int num_include) {
+void IRAM_ATTR debug_msg(enum DEBUG_LEVELS message_debug_level, const char* debug_message, bool include_num, int num_include) {
     if (debug_level != DEBUG_NO_DEBUG) {
         switch (message_debug_level) {
             case DEBUG_FULL:

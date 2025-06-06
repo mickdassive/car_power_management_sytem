@@ -16,7 +16,7 @@ void setup() {
   //rtos task setup
   xTaskCreate(
     adc_monitor_periral_ch_current, // Task function
-    "task for checking if the peripheral power bus is in over current", // Name of the task
+    "peripheral power bus monitoring", // Name of the task
     2048, // Stack size in words
     NULL, // Task parameters
     1, // Task priority

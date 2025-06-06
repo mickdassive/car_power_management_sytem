@@ -692,7 +692,7 @@ int adc_event_count_read(struct pin pin_needed) {
  *
  * @note If an invalid ADC number or channel is provided, the function logs an error and returns without making changes.
  */
-void adc_event_clear(struct pin pin_needed) {
+void IRAM_ATTR adc_event_clear(struct pin pin_needed) {
 
   debug_msg(partal_adc, "adc_event_clear, called for channel", true, adc_channel);
 
@@ -955,11 +955,18 @@ void adc_set_ch_current_limit(struct pin pin_needed, uint current_limit) {
   }
 
   if (!pin_needed.onboard) {
-    //calculate the current limit in 12 bit counts
-    uint16_t current_limit_counts = (uint16_t)((current_limit / 1000.0) * 4095.0); // Convert mA to counts (assuming 3.3V reference and 12-bit ADC)
+    //calculate the current limit
+    //calculate voltage drop across the shunt resistor
+    float voltage_drop = (current_limit / 1000.0) * adc_current_sense_resistance; // Convert mA to A and multiply by resistance to get voltage
+
+    //calculate the minimum voltage for csn
+    float csn_voltage_min = ((adc_read(ref_12v) * (3.3 / 65535.0)) * 5) - voltage_drop; // Read the ADC value and convert to voltage (assuming 3.3V reference)
+
+    //calculate the minimum voltage for csn in counts
+    int csn_counts_min = (int)(((csn_voltage_min / 5) / 3.3) * 4095.0); // Convert voltage to counts (assuming 12-bit thresholds)
  
     //set threshold value for the channel
-    adc_threshold_set(pin_needed, current_limit_counts, 0); // Set the threshold with the calculated counts and a low threshold of 0
+    adc_threshold_set(pin_needed, 0xFFF, csn_counts_min); // Set the low threshold with the calculated counts and a high threshold of 0
   }
 
   
@@ -980,13 +987,14 @@ void adc_set_ch_current_limit(struct pin pin_needed, uint current_limit) {
  * @note Assumes a 3.3V ADC reference and a 16-bit ADC resolution.
  * @note Uses the global variable 'adc_current_sense_resistance' for the shunt resistor value.
  */
-int adc_read_ch_current (struct pin pin_needed) {
+int IRAM_ATTR adc_read_ch_current (struct pin pin_needed) {
 
   debug_msg(partal_adc, "adc_read_ch_current called", false, 0);
 
   //curent csn value
   uint16_t current_csn_voltage_counts = 0;
   float current_csn_voltage = 0;
+  flaot csn_min_voltage = 0;
   uint16_t current_supply_voltage_counts = 0;
   float current_supply_voltage = 0;
   float v_drop = 0;
@@ -994,6 +1002,9 @@ int adc_read_ch_current (struct pin pin_needed) {
 
   //read the curent supply voltage
   current_supply_voltage_counts = (analogRead(pin_needed.pin_number)) << 4; // Read the analog value from the pin and map it to 16 bit
+
+  //convert the counts to voltage
+  current_supply_voltage = (((float)current_supply_voltage_counts / 65535.0) * 3.3) * 5; // Convert counts to voltage (assuming 3.3V reference)
   
   //read the curent csn value
   if (pin_needed.onboard) {
@@ -1003,8 +1014,8 @@ int adc_read_ch_current (struct pin pin_needed) {
   }
 
   //convert the counts to voltage
-  current_csn_voltage = ((float)current_csn_voltage_counts / 65535.0) * 3.3; // Convert counts to voltage (assuming 3.3V reference)
-  current_supply_voltage = ((float)current_supply_voltage_counts / 65535.0) * 3.3; // Convert counts to voltage (assuming 3.3V reference)
+  current_csn_voltage = (((float)current_csn_voltage_counts / 65535.0) * 3.3) * 5; // Convert counts to voltage (assuming 3.3V reference)
+  current_supply_voltage = (((float)current_supply_voltage_counts / 65535.0) * 3.3) * 5; // Convert counts to voltage (assuming 3.3V reference)
 
   //subtract the csn voltage from the supply voltage to get the voltage drop across the shunt resistor & mosfet
   v_drop = current_supply_voltage - current_csn_voltage;
@@ -1086,13 +1097,29 @@ void adc_monitor_periral_ch_current(void * parameter) {
   debug_msg(partal_adc, "adc_check_periral_ch_current called", false, 0);
 
   //vars
-  uint16_t curent_limit_in_counts = 0;
+  float voltage_drop = 0.0;
+  float reference_voltage = 0.0; // Reference voltage for the ADC
+  flaot min_csn_voltage = 0.0; // Minimum CSN voltage for the current limit
+  int current_csn_voltage_counts = 0; // Current CSN voltage in counts
+  float ciurrent_csn_voltage = 0.0; // Current CSN voltage in volts
 
-  //calculate the current limit in 12 bit counts
-  curent_limit_in_counts = (uint16_t)(((*peripheral_pwr_csn.chanel_curent_limit_pointer) / 1000.0) * 4095.0); // Convert mA to counts (assuming 3.3V reference and 12-bit ADC)
+  //calculate the voltage drop across the shunt resistor and MOSFET
+  voltage_drop = peripheral_pwr_csn.chanel_curent_limit_pointer * adc_current_sense_resistance; // Calculate the voltage drop across the shunt resistor and MOSFET
+
+  //read the reference voltage for the ADC
+  reference_voltage = ((analogRead(peripheral_pwr_csn.pin_number) / 4095.0) * 3.3) * 5; // Convert the ADC reading to voltage (assuming 12-bit ADC and 3.3V reference)
+
+  //calculate the min csn voltage for the current limit
+  min_csn_voltage = reference_voltage - voltage_drop; // Calculate the minimum CSN voltage for the current limit
+
+
 
   for (;;) {
-    if (analogRead(peripheral_pwr_csn.pin_number) > curent_limit_in_counts) {
+    //read csn voltage
+    current_csn_voltage_counts = analogRead(peripheral_pwr_csn.pin_number); // Read the ADC value from the peripheral power channel
+    ciurrent_csn_voltage = (((float)current_csn_voltage_counts / 4095.0) * 3.3) * 5; // Convert counts to voltage (assuming 12-bit ADC and 3.3V reference)
+
+    if (ciurrent_csn_voltage < min_csn_voltage) {
       debug_msg(partal_adc, "current limit exceeded on peripheral power channel", false, 0);
       io_call(peripheral_pwr_csn, write, low); // Disable the peripheral power channel
 
@@ -1107,6 +1134,7 @@ void adc_monitor_periral_ch_current(void * parameter) {
 
   return;
 }
+
 
 
 

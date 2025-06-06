@@ -62,7 +62,7 @@ uint8_t io_read_current_io_state(uint8_t port) {
  * @return If performing a read operation, returns the value read from the pin. If performing a write operation, returns 0.
  *         If an invalid `read_write` or `high_low` value is provided, the function does nothing and returns 0.
  */
-int io_call(struct pin pin_needed, enum read_write read_write, enum high_low high_low) {
+int IRAM_ATTR io_call(struct pin pin_needed, enum read_write read_write, enum high_low high_low) {
 
   debug_msg(partal_io, "io_call called, making pin call", false, 0);
 
