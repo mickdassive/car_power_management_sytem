@@ -14300,7 +14300,7 @@
 			)
 		)
 	)
-	(global_label "IOX0_INT"
+	(global_label "IOX_0_INT"
 		(shape input)
 		(at 34.29 129.54 270)
 		(fields_autoplaced yes)
@@ -14312,7 +14312,7 @@
 		)
 		(uuid "1f9b03f8-1224-47cd-b52d-d5a56a29aef3")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 34.29 140.75 90)
+			(at 34.29 141.7176 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14564,7 +14564,7 @@
 			)
 		)
 	)
-	(global_label "IOX0_INT"
+	(global_label "IOX_0_INT"
 		(shape input)
 		(at 151.13 39.37 180)
 		(fields_autoplaced yes)
@@ -14576,7 +14576,7 @@
 		)
 		(uuid "363d0209-7bcc-409e-b366-5bd195a8f87c")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 139.9994 39.37 0)
+			(at 138.9524 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
