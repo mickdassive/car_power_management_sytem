@@ -73,6 +73,18 @@ void IRAM_ATTR debug_msg(enum DEBUG_LEVELS message_debug_level, const char* debu
                     Serial.println(debug_message);
                 }
                 break;
+            case DEBUG_PARTIAL_CAN:
+                Serial.print("debug msg at millis: ");
+                Serial.print(millis());
+                Serial.print("| ");
+                if (include_num) {
+                    Serial.print(debug_message);
+                    Serial.print("  | attached value: ");
+                    Serial.println(num_include);
+                } else {
+                    Serial.println(debug_message);
+                }
+                break;
             case DEBUG_NO_DEBUG:
                 break;
         }

@@ -3,6 +3,7 @@
 #include "adc.h"
 #include "DEBUG.h"
 #include "io.h"
+#include "can.h"
 
 
 void setup() {
@@ -12,6 +13,9 @@ void setup() {
   // init gpio and adc
   io_gpio_init();
   adc_init(true);
+
+  // init can bus
+  can_init();
 
   //rtos task setup
   xTaskCreate(
