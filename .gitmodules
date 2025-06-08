@@ -1,0 +1,3 @@
+[submodule "disrabution_controler/esp-idf"]
+	path = disrabution_controler/esp-idf
+	url = https://github.com/espressif/esp-idf.git
