@@ -204,6 +204,9 @@ enum adc_channel {
 //chanel curent sence resistance in ohms
 const float adc_current_sense_resistance = 0.0066; // 6.6mOhm
 
+//cue for returning adc reads state
+extern QueueHandle_t adc_reading_queue;
+
 
 //function defines 
 void adc_self_cal (uint8_t adc_add);
@@ -213,9 +216,11 @@ void adc_hysteresis_set(struct pin pin_needed, uint8_t hysteresis_set);
 int adc_event_count_read(struct pin pin_needed);
 void adc_event_clear(struct pin pin_needed);
 int adc_read(struct pin pin_needed);
+void adc_read_rtos_wraper(void *arg);
 void adc_clear_event_flags(int adc_num);
 struct pin adc_determine_alert_source(struct pin alert_pin);
 void adc_set_ch_current_limit(struct pin pin_needed, uint current_limit);
+void adc_set_ch_current_limit_rtos_wraper (void * peram);
 int adc_read_ch_current (struct pin pin_needed);
 void IRAM_ATTR adc_alert_handler (struct pin alert_pin);
 void adc_monitor_periral_ch_current(void * parameter);

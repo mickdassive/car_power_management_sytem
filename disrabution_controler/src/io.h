@@ -87,6 +87,7 @@ struct pin {
   int pin_number;        //pin number, for ESP-12F: GPIO#, for iox: phisical pin#
   int adc_num;           //adc number (can be 1 or 2 only)
   int adc_channel;       //adc channel (can be 0-7 only)
+  int io_chanel_number;
   in_out pin_mode;       //defines pinmode see enum above for deatails
   bool onboard;          //If true, IO is on ESP8266; if false, IO is on IO expander
   void (*interrupt_handler)(struct pin); // Pointer to interrupt handler function (optional)
@@ -95,66 +96,67 @@ struct pin {
 
 };
 //BE SURE TO ADD PINS TO BOTH THE "pin" STRUCT AND THE "pin_names" ARRAY THEY MUST MATCH
-//io_call struct defines  {mask, port, pin, pin_mode, onboard, interrupt_handler(optional)}
-static struct pin sda {0x00, 2, 2, -1, -1, i2c, true};
-static struct pin scl {0x00, 3, 3, -1, -1, i2c, true};
-static struct pin iox_0_int {0x00, -1, 1, -1, -1, intr, true, nullptr};
-static struct pin car_acc {0x00, -1, 4, -1, -1, in, true};
-static struct pin peripheral_pwr_gate {0x00, -1, 5, -1, -1, out, true};
-static struct pin gpio_6 {0x00, -1, 6, -1, -1, in, true};
-static struct pin gpio_7 {0x00, -1, 7, -1, -1, in, true};
-static struct pin gpio_8 {0x00, -1, 8, -1, -1, in, true};
-static struct pin gpio_9 {0x00, -1, 9, -1, -1, in, true};
-static struct pin gpio_10 {0x00, -1, 10, -1, -1, in, true};
-static struct pin gpio_11 {0x00, -1, 11, -1, -1, in, true};
-static struct pin gpio_12 {0x00, -1, 12, -1, -1, in, true};
-static struct pin peripheral_pwr_csn {0x00, -1, 13, -1, -1, analog_in, true, nullptr, &peripheral_current_limit};
-static struct pin ref_12v {0x00, -1, 14, -1, -1, analog_in, true};
-static struct pin dac_1 {0x00, -1, 15, -1, -1, analog_out, true};
-static struct pin dac_2 {0x00, -1, 16, -1, -1, analog_out, true};
-static struct pin usb_d_n {0x00, -1, 19, -1, -1, usb, true};
-static struct pin usb_d_p {0x00, -1, 20, -1, -1, usb, true};
-static struct pin disrabution_neo_pixels {0x00, -1, 21, -1, -1, out, true};
-static struct pin adc_1_alert {0x00, -1, 15, 1, -1, intr, true, adc_alert_handler};
-static struct pin adc_2_alert {0x00, -1, 16, 2, -1, intr, true, adc_alert_handler};
-static struct pin can_err {0x00, -1, 33, -1, -1, in, true};
-static struct pin can_wake {0x00,-1, 34, -1, -1, intr, true};
-static struct pin can_stb {0x00, -1, 35, -1, -1, out, true};
-static struct pin can_tx {0x00, -1, 36, -1, -1, out, true};
-static struct pin can_en {0x00, -1, 38, -1, -1, out, true};
-static struct pin can_rx {0x00, -1, 37, -1, -1, in, true};
-static struct pin ch1_gate {0x80, 0, 11, 1, 0, out, false};
-static struct pin ch2_gate {0x40, 0, 10, 1, 1, out, false};
-static struct pin ch3_gate {0x20, 0, 9, 1, 2, out, false};
-static struct pin ch4_gate {0x10, 0, 8, 1, 3, out, false};
-static struct pin ch5_gate {0x08, 0, 7, 1, 4, out, false};
-static struct pin ch6_gate {0x04, 0, 6, 1, 5, out, false};
-static struct pin ch7_gate {0x02, 0, 5, 1, 6, out, false};
-static struct pin ch8_gate {0x01, 0, 4, 1, 7, out, false};
-static struct pin ch9_gate {0x80, 1, 20, 2, 0, out, false};
-static struct pin ch10_gate {0x40, 1, 19, 2, 1, out, false};
-static struct pin ch11_gate {0x20, 1, 18, 2, 2, out, false};
-static struct pin ch12_gate {0x10, 1, 17, 2, 3, out, false};
-static struct pin ch13_gate {0x08, 1, 16, 2, 4, out, false};
-static struct pin ch14_gate {0x04, 1, 15, 2, 5, out, false};
-static struct pin ch15_gate {0x02, 1, 14, 2, 6, out, false};
-static struct pin ch16_gate {0x01, 1, 13, 2, 7, out, false};
-static struct pin ch1_csn {0x00, -1, 6, 1, 0, analog_in, false, nullptr, &ch1_current_limit};
-static struct pin ch2_csn {0x00, -1, 5, 1, 1, analog_in, false, nullptr, &ch2_current_limit};
-static struct pin ch3_csn {0x00, -1, 4, 1, 2, analog_in, false, nullptr, &ch3_current_limit};
-static struct pin ch4_csn {0x00, -1, 3, 1, 3, analog_in, false, nullptr, &ch4_current_limit};
-static struct pin ch5_csn {0x00, -1, 2, 1, 4, analog_in, false, nullptr, &ch5_current_limit};
-static struct pin ch6_csn {0x00, -1, 1, 1, 5, analog_in, false, nullptr, &ch6_current_limit};
-static struct pin ch7_csn {0x00, -1, 16, 1, 6, analog_in, false, nullptr, &ch7_current_limit};
-static struct pin ch8_csn {0x00, -1, 15, 1, 7, analog_in, false, nullptr, &ch8_current_limit};
-static struct pin ch9_csn {0x00, -1, 6, 2, 0, analog_in, false, nullptr, &ch9_current_limit};
-static struct pin ch10_csn {0x00, -1, 5, 2, 1, analog_in, false, nullptr, &ch10_current_limit};
-static struct pin ch11_csn {0x00, -1, 4, 2, 2, analog_in, false, nullptr, &ch11_current_limit};
-static struct pin ch12_csn {0x00, -1, 3, 2, 3, analog_in, false, nullptr, &ch12_current_limit};
-static struct pin ch13_csn {0x00, -1, 2, 2, 4, analog_in, false, nullptr, &ch13_current_limit};
-static struct pin ch14_csn {0x00, -1, 1, 2, 5, analog_in, false, nullptr, &ch14_current_limit};
-static struct pin ch15_csn {0x00, -1, 16, 2, 6, analog_in, false, nullptr, &ch15_current_limit};
-static struct pin ch16_csn {0x00, -1, 15, 2, 7, analog_in, false, nullptr, &ch16_current_limit};
+//io_call struct defines  {mask, port, pin, pin_mo if blackout ise, onboard, interrupt_handler(optional)}
+static struct pin sda {0x00, 2, 2, -1, -1, -1, i2c, true};
+static struct pin scl {0x00, 3, 3, -1, -1, -1, i2c, true};
+static struct pin iox_0_int {0x00, -1, 1, -1, -1, -1, intr, true, nullptr};
+static struct pin car_acc {0x00, -1, 4, -1, -1, -1, in, true};
+static struct pin peripheral_pwr_gate {0x00, -1, 5, -1, -1, 17, out, true};
+static struct pin gpio_6 {0x00, -1, 6, -1, -1, -1, in, true};
+static struct pin gpio_7 {0x00, -1, 7, -1, -1, -1, in, true};
+static struct pin gpio_8 {0x00, -1, 8, -1, -1, -1, in, true};
+static struct pin gpio_9 {0x00, -1, 9, -1, -1, -1, in, true};
+static struct pin gpio_10 {0x00, -1, 10, -1, -1, -1, in, true};
+static struct pin gpio_11 {0x00, -1, 11, -1, -1, -1, in, true};
+static struct pin gpio_12 {0x00, -1, 12, -1, -1, -1, in, true};
+static struct pin peripheral_pwr_csn {0x00, -1, 13, -1, -1, 17, analog_in, true, nullptr, &peripheral_current_limit};
+static struct pin ref_12v {0x00, -1, 14, -1, -1, 0, analog_in, true};
+static struct pin dac_1 {0x00, -1, 15, -1, -1, -1, analog_out, true};
+static struct pin dac_2 {0x00, -1, 16, -1, -1, -1, analog_out, true};
+static struct pin usb_d_n {0x00, -1, 19, -1, -1, -1, usb, true};
+static struct pin usb_d_p {0x00, -1, 20, -1, -1, -1, usb, true};
+static struct pin disrabution_neo_pixels {0x00, -1, 21, -1, -1, -1, out, true};
+static struct pin adc_1_alert {0x00, -1, 15, 1, -1, -1, intr, true, adc_alert_handler};
+static struct pin adc_2_alert {0x00, -1, 16, 2, -1, -1, intr, true, adc_alert_handler};
+static struct pin can_err {0x00, -1, 33, -1, -1, -1, in, true};
+static struct pin can_wake {0x00,-1, 34, -1, -1, -1, intr, true};
+static struct pin can_stb {0x00, -1, 35, -1, -1, -1, out, true};
+static struct pin can_tx {0x00, -1, 36, -1, -1, -1, out, true};
+static struct pin can_en {0x00, -1, 38, -1, -1, -1, out, true};
+static struct pin can_rx {0x00, -1, 37, -1, -1, -1, in, true};
+static struct pin ch1_gate {0x80, 0, 11, 1, 0, 1, out, false};
+static struct pin ch2_gate {0x40, 0, 10, 1, 1, 2, out, false};
+static struct pin ch3_gate {0x20, 0, 9, 1, 2, 3, out, false};
+static struct pin ch4_gate {0x10, 0, 8, 1, 3, 4, out, false};
+static struct pin ch5_gate {0x08, 0, 7, 1, 4, 5, out, false};
+static struct pin ch6_gate {0x04, 0, 6, 1, 5, 6, out, false};
+static struct pin ch7_gate {0x02, 0, 5, 1, 6, 7, out, false};
+static struct pin ch8_gate {0x01, 0, 4, 1, 7, 8, out, false};
+static struct pin ch9_gate {0x80, 1, 20, 2, 0, 9, out, false};
+static struct pin ch10_gate {0x40, 1, 19, 2, 1, 10, out, false};
+static struct pin ch11_gate {0x20, 1, 18, 2, 2, 11, out, false};
+static struct pin ch12_gate {0x10, 1, 17, 2, 3, 12, out, false};
+static struct pin ch13_gate {0x08, 1, 16, 2, 4, 13, out, false};
+static struct pin ch14_gate {0x04, 1, 15, 2, 5, 14, out, false};
+static struct pin ch15_gate {0x02, 1, 14, 2, 6, 15, out, false};
+static struct pin ch16_gate {0x01, 1, 13, 2, 7, 16, out, false};
+static struct pin ch1_csn {0x00, -1, 6, 1, 0, 1, analog_in, false, nullptr, &ch1_current_limit};
+static struct pin ch2_csn {0x00, -1, 5, 1, 1, 2, analog_in, false, nullptr, &ch2_current_limit};
+static struct pin ch3_csn {0x00, -1, 4, 1, 2, 3, analog_in, false, nullptr, &ch3_current_limit};
+static struct pin ch4_csn {0x00, -1, 3, 1, 3, 4, analog_in, false, nullptr, &ch4_current_limit};
+static struct pin ch5_csn {0x00, -1, 2, 1, 4, 5, analog_in, false, nullptr, &ch5_current_limit};
+static struct pin ch6_csn {0x00, -1, 1, 1, 5, 6, analog_in, false, nullptr, &ch6_current_limit};
+static struct pin ch7_csn {0x00, -1, 16, 1, 6, 7, analog_in, false, nullptr, &ch7_current_limit};
+static struct pin ch8_csn {0x00, -1, 15, 1, 7, 8, analog_in, false, nullptr, &ch8_current_limit};
+static struct pin ch9_csn {0x00, -1, 6, 2, 0, 9, analog_in, false, nullptr, &ch9_current_limit};
+static struct pin ch10_csn {0x00, -1, 5, 2, 1, 10, analog_in, false, nullptr, &ch10_current_limit};
+static struct pin ch11_csn {0x00, -1, 4, 2, 2, 11, analog_in, false, nullptr, &ch11_current_limit};
+static struct pin ch12_csn {0x00, -1, 3, 2, 3, 12, analog_in, false, nullptr, &ch12_current_limit};
+static struct pin ch13_csn {0x00, -1, 2, 2, 4, 13, analog_in, false, nullptr, &ch13_current_limit};
+static struct pin ch14_csn {0x00, -1, 1, 2, 5, 14, analog_in, false, nullptr, &ch14_current_limit};
+static struct pin ch15_csn {0x00, -1, 16, 2, 6, 15, analog_in, false, nullptr, &ch15_current_limit};
+static struct pin ch16_csn {0x00, -1, 15, 2, 7, 16, analog_in, false, nullptr, &ch16_current_limit};
+static struct pin null_pin {0x00, -1, -1, -1, -1, -1, empty_pin, false, nullptr, nullptr};
 
  
 
@@ -235,10 +237,27 @@ enum high_low {
   read_mode
 };
 
+//io_call rtos wrapper params struct
+struct io_call_rtos_wraper_params {
+  struct pin pin_needed;
+  enum read_write rw;
+  enum high_low hl;
+};
+
+//io mode flags
+extern bool io_allow_off_road;
+extern bool io_blackout_enabled;
+
+//que for returning io channel state
+extern QueueHandle_t channelStateQueue;
+
+
 //function defines
 uint8_t io_read_current_io_state(uint8_t port);
 int io_call(struct pin pin_needed, enum read_write read_write, enum high_low high_low);
+void io_call_rtos_wraper(void *peram);
 void io_gpio_init();
+void io_read_chanel_state (void *peram);
 
 
 

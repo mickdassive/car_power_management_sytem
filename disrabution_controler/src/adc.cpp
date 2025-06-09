@@ -26,6 +26,9 @@
 #include "DEBUG.h"
 #include "io.h"
 
+//dac reading queue to pass readings
+QueueHandle_t adc_reading_queue = xQueueCreate(1, sizeof(uint16_t));
+
 
 /**
  * @brief Performs self calibration for the ADC module.
@@ -60,7 +63,7 @@ void adc_self_cal (uint8_t adc_add) {
     Wire.endTransmission();
 
     // Begin read
-    Wire.requestFrom(adc_add, 1);
+    Wire.requestFrom((uint8_t)adc_add, (uint8_t)1);
     current_gen_config_state = Wire.read();
     Wire.endTransmission();
 
@@ -69,6 +72,8 @@ void adc_self_cal (uint8_t adc_add) {
 
     if (current_gen_config_state == 0) {
       cal_complete = true;
+      // Calibration complete, exit the loop
+      break;
     }
   }
 
@@ -422,7 +427,7 @@ void adc_threshold_set(struct pin pin_needed , uint16_t high_th, uint16_t low_th
   }
   Wire.endTransmission();
 
-  Wire.requestFrom(adc_add, 1);
+  Wire.requestFrom((uint8_t)adc_add, (uint8_t)1);
   current_hysteresis_val = (Wire.read() & 0x0F);
   current_event_count = (Wire.read() & 0x0F);
   Wire.endTransmission();
@@ -553,7 +558,7 @@ void adc_hysteresis_set(struct pin pin_needed, uint8_t hysteresis_set) {
 
   Wire.endTransmission();
 
-  Wire.requestFrom(adc_add, 1);
+  Wire.requestFrom((uint8_t)adc_add, (uint8_t)1);
   current_hysteresis_reg_val = (Wire.read() & 0x0F);
   Wire.endTransmission();
   
@@ -673,7 +678,7 @@ int adc_event_count_read(struct pin pin_needed) {
   }
   Wire.endTransmission();
 
-  Wire.requestFrom(adc_add, 1);
+  Wire.requestFrom((uint8_t)adc_add, (uint8_t)1);
   chx_current_event_count = (Wire.read() & 0x0F);
 
   debug_msg(DEBUG_PARTAL_ADC, "event count read complete with value", true, chx_current_event_count);
@@ -821,7 +826,7 @@ int adc_read(struct pin pin_needed) {
   
   Wire.endTransmission();
 
-  Wire.requestFrom(adc_add, 2);
+  Wire.requestFrom((uint8_t)adc_add, (uint8_t)2);
   read_word = Wire.read();
   read_word |= (Wire.read() << 8); // Read the MSB and combine with LSB
   Wire.endTransmission();
@@ -830,6 +835,24 @@ int adc_read(struct pin pin_needed) {
 
   return read_word;
 
+}
+
+void adc_read_rtos_wraper(void *arg) {
+
+  debug_msg(DEBUG_PARTAL_ADC, "adc_read_rtos_wraper called", false, 0);
+
+  struct pin *pin_needed = (struct pin *)arg; // Cast the argument to a pin structure
+  int adc_value = adc_read(*pin_needed); // Read the ADC value for the specified pin
+
+  //pass read value to queue
+  if (adc_value != -1) {
+    xQueueSend(adc_reading_queue, &adc_value, portMAX_DELAY); // Send the read value to the queue
+    debug_msg(DEBUG_PARTAL_ADC, "adc_read_rtos_wraper complete", false, 0);
+  } else {
+    debug_msg(DEBUG_PARTAL_ADC, "adc_read_rtos_wraper failed to read ADC", false, 0);
+  }
+
+  vTaskDelete(NULL); // Delete the task after completion
 }
 
 /**
@@ -904,7 +927,7 @@ struct pin adc_determine_alert_source(struct pin alert_pin) {
   Wire.write(adc_op_single_read);
   Wire.write(adc_event_flag);
   Wire.endTransmission();
-  Wire.requestFrom(adc_add, 1);
+  Wire.requestFrom((uint8_t)adc_add, (uint8_t)1);
   current_event_flag_register_value = Wire.read();
   Wire.endTransmission();
 
@@ -930,6 +953,9 @@ struct pin adc_determine_alert_source(struct pin alert_pin) {
     }
   }
 
+  debug_msg(DEBUG_PARTAL_ADC, "adc_determine_alert_source complete with no source found", false, 0);
+  return null_pin; // Return a null pin if no matching channel is found
+  
 }
 
 /**
@@ -968,6 +994,30 @@ void adc_set_ch_current_limit(struct pin pin_needed, uint current_limit) {
 
   
   return;
+}
+
+/**
+ * @brief RTOS wrapper function to set the channel current limit for a specific pin.
+ *
+ * This function is intended to be used as a FreeRTOS task. It casts the provided parameter
+ * to a pointer to a `struct pin`, retrieves the current limit value from the pin's
+ * `chanel_curent_limit_pointer`, and calls `adc_set_ch_current_limit` with the pin and
+ * current limit. After execution, the task deletes itself.
+ *
+ * @param peram Pointer to a `struct pin` representing the pin whose current limit is to be set.
+ */
+void adc_set_ch_current_limit_rtos_wraper (void * peram) {
+
+  struct pin * pin_needed = (struct pin *)peram; // Cast the parameter to a pointer to struct pin
+  int current_limit = *(pin_needed->chanel_curent_limit_pointer); // Get the current limit value from the pointer
+
+  debug_msg(DEBUG_PARTAL_ADC, "adc_set_ch_current_limit_rtos_wraper called", false, 0);
+
+  adc_set_ch_current_limit(*pin_needed, current_limit); // Call the actual function with the pin structure and current limit
+
+  delete peram; // Delete the parameter to free memory
+
+  vTaskDelete(NULL); // Delete the task after completion
 }
 
 /**

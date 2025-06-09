@@ -23,6 +23,15 @@ void setup() {
     "peripheral power bus monitoring", // Name of the task
     2048, // Stack size in words
     NULL, // Task parameters
+    30, // Task priority
+    NULL // Task handle
+  );
+
+  xTaskCreate(
+    can_check_for_alerts, // Task function
+    "can alert handler", // Name of the task
+    2048, // Stack size in words
+    NULL, // Task parameters
     1, // Task priority
     NULL // Task handle
   );

@@ -30,6 +30,14 @@ uint16_t peripheral_current_limit = 0;
 uint8_t iox_0_port_0_interrupt = 0xFF;
 uint8_t iox_0_port_1_interrupt = 0xFF;
 
+//specal io modes
+bool io_allow_off_road = false;
+bool io_blackout_enabled = false;
+
+//cue for returning io channel state
+// Create a queue to hold one uint8_t value
+QueueHandle_t channelStateQueue = xQueueCreate(1, sizeof(uint32_t));
+
 /**
  * Reads the current input/output state from the specified port and IOX number.
  *
@@ -143,6 +151,36 @@ int IRAM_ATTR io_call(struct pin pin_needed, enum read_write read_write, enum hi
   return 0;
 }
 
+
+
+/**
+ * @brief Wrapper function to call io_call with parameters passed via a struct pointer.
+ *
+ * This function is intended to be used as a wrapper for RTOS tasks or threads that require
+ * passing multiple parameters. It casts the provided void pointer to the expected parameter
+ * structure, calls the io_call function with the extracted parameters, and then frees the
+ * allocated memory for the parameter structure.
+ *
+ * @param peram Pointer to a dynamically allocated io_call_rtos_wraper_params structure containing
+ *              the parameters required by io_call.
+ * @return int  The result returned by the io_call function.
+ *
+ * @note The function takes ownership of the parameter pointer and deletes it after use.
+ */
+void io_call_rtos_wraper(void *peram) {
+
+
+  // Cast the parameter to the correct type
+  io_call_rtos_wraper_params *params = static_cast<io_call_rtos_wraper_params *>(peram);
+
+  // Call the io_call function with the provided parameters
+  io_call(params->pin_needed, params->rw, params->hl);
+
+  // Free the allocated memory for the params structure
+  delete params;
+
+  vTaskDelete(NULL); // Delete the task after completion
+}
 
 /**
  * @brief Initializes the GPIO pins and I2C interface for the system.
@@ -279,6 +317,64 @@ void io_gpio_init() {
   debug_msg(DEBUG_PARTIAL_IO, "pins have been initialized", false, 0);
 
   return;
+}
+
+/**
+ * @brief Reads the current state of all IO channels and sends the result to a FreeRTOS queue.
+ *
+ * This function communicates with an IO expander over I2C to read the state of two input ports,
+ * reverses the bit order of each byte, and combines them into a single 32-bit integer. It also
+ * appends the state of a peripheral power gate channel to the result. The final state is sent
+ * to the provided FreeRTOS queue. The task deletes itself upon completion.
+ *
+ * @param peram Pointer to a FreeRTOS queue handle (QueueHandle_t) where the channel state will be sent.
+ *
+ * @note
+ * - The function is intended to be run as a FreeRTOS task.
+ */
+void io_read_chanel_state (void *peram) {
+
+  debug_msg(DEBUG_PARTIAL_IO, "io_read_chanel_state called, reading channel state", false, 0);
+
+  QueueHandle_t queue = (QueueHandle_t)peram;
+
+    // create var to hold the state
+    uint32_t state = 0;
+
+    // Read the current state of all channels
+    Wire.beginTransmission(iox_0_add);
+    Wire.write(iox_input_port_0);
+    Wire.endTransmission();
+    Wire.requestFrom(iox_0_add, static_cast<uint8_t>(2));
+    if (Wire.available() == 2) {
+      // Read the two bytes of input state
+      uint8_t port0_state = Wire.read();
+      uint8_t port1_state = Wire.read();
+      Wire.endTransmission();
+
+      // Reverse the bit order of each byte
+      auto reverse_byte = [](uint8_t b) -> uint8_t {
+        b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
+        b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
+        b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
+        return b;
+      };
+      port0_state = reverse_byte(port0_state);
+      port1_state = reverse_byte(port1_state);
+
+      // Combine the two bytes into a single 32-bit integer
+      state = static_cast<uint32_t>(port0_state) | (static_cast<uint32_t>(port1_state) << 8);
+      //apend periferal chanel data
+      state |= (static_cast<uint32_t>(static_cast<bool>(io_call(peripheral_pwr_gate, READ, read_mode))) << 16);
+    } else {
+      debug_msg(DEBUG_PARTIAL_IO, "Failed to read channel state from IOX", false, 0);
+      state = 0; // Set to zero if reading fails
+    }
+
+    // Send the result to the queue
+    xQueueSend(queue, &state, portMAX_DELAY);
+
+    vTaskDelete(NULL); // Delete the task after completion
 }
 
 
