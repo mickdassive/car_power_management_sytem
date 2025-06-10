@@ -26,6 +26,25 @@ uint16_t ch15_current_limit = 0;
 uint16_t ch16_current_limit = 0;
 uint16_t peripheral_current_limit = 0;
 
+//chanel fault state pointers
+bool ch1_faulted = false;
+bool ch2_faulted = false;
+bool ch3_faulted = false;
+bool ch4_faulted = false;
+bool ch5_faulted = false;
+bool ch6_faulted = false;
+bool ch7_faulted = false;
+bool ch8_faulted = false;
+bool ch9_faulted = false;
+bool ch10_faulted = false;
+bool ch11_faulted = false;
+bool ch12_faulted = false;
+bool ch13_faulted = false;
+bool ch14_faulted = false;
+bool ch15_faulted = false;
+bool ch16_faulted = false;
+bool ch17_faulted = false;
+
 //iox interrupt register values
 uint8_t iox_0_port_0_interrupt = 0xFF;
 uint8_t iox_0_port_1_interrupt = 0xFF;
@@ -37,6 +56,10 @@ bool io_blackout_enabled = false;
 //cue for returning io channel state
 // Create a queue to hold one uint8_t value
 QueueHandle_t channelStateQueue = xQueueCreate(1, sizeof(uint32_t));
+
+//neopixel object
+Adafruit_NeoPixel strip((uint16_t)io_num_pixels, (int)disrabution_neo_pixels.pin_number, NEO_GRB + NEO_KHZ800);
+
 
 /**
  * Reads the current input/output state from the specified port and IOX number.
@@ -375,6 +398,110 @@ void io_read_chanel_state (void *peram) {
     xQueueSend(queue, &state, portMAX_DELAY);
 
     vTaskDelete(NULL); // Delete the task after completion
+}
+
+/**
+ * @brief Initializes the NeoPixel LED strip for the distribution controller.
+ *
+ * This function sets up the NeoPixel strip by configuring the pin, pixel type, and number of pixels.
+ * It initializes the strip, turns all pixels off, and sets the default brightness.
+ * Debug messages are logged before and after initialization.
+ *
+ * Dependencies:
+ * - Requires Adafruit_NeoPixel library.
+ * - Uses global variables: io_num_pixels, disrabution_neo_pixels.pin_number, pixel_type.
+ *
+ * @note This function should be called during system initialization before using the NeoPixel strip.
+ */
+
+void io_led_init() {
+  debug_msg(DEBUG_PARTIAL_IO, "io_led_init called, initializing neopixels", false, 0);
+
+  strip.begin(); // Initialize the strip
+  strip.show(); // Initialize all pixels to 'off'
+  strip.setBrightness(100);
+  
+  debug_msg(DEBUG_PARTIAL_IO, "NeoPixels initialized", false, 0);
+  return;
+}
+
+/**
+ * @brief Sets the color of a specific LED channel.
+ *
+ * This function sets the color of the LED at the specified channel index using the provided
+ * 32-bit color value. If the channel index is within the valid range, the color is set and
+ * the change is displayed. If the channel index is out of range, a debug message is logged.
+ *
+ * @param ch The channel index of the LED to set.
+ * @param color The 32-bit color value to assign to the LED.
+ */
+void io_led_set_ch_color (uint8_t ch, uint32_t color) {
+  debug_msg(DEBUG_PARTIAL_IO, "io_led_set_ch_color called, setting color for channel", true, ch);
+
+  if (ch < strip.numPixels()) {
+    strip.setPixelColor(ch, color);
+    strip.show();
+  } else {
+    debug_msg(DEBUG_PARTIAL_IO, "Channel out of range for NeoPixels", true, ch);
+  }
+  return;
+}
+
+/**
+ * @brief Handles LED updates based on the current IO channel states.
+ *
+ * This function runs as a FreeRTOS task and continuously updates the LED strip to reflect
+ * the status of each IO channel. It performs the following steps in an infinite loop:
+ *   1. Creates a task to read the current IO channel state and passes a queue for communication.
+ *   2. Waits to receive the current state from the queue.
+ *   3. Iterates through all IO channels and sets the corresponding LED color:
+ *        - Yellow if the channel is faulted.
+ *        - Green if the channel is active.
+ *        - Red if the channel is inactive.
+ *   4. Updates the LED strip to show the new colors.
+ *   5. Delays for 1000 milliseconds before repeating.
+ *
+ * @param parameter Pointer to task parameters (unused).
+ */
+void io_led_handler(void *parameter) {
+  debug_msg(DEBUG_PARTIAL_IO, "io_led_handler called, handling LED updates", false, 0);
+
+  //setup vars
+  uint32_t current_state = 0;
+
+  for (;;) {
+    //read curent io state
+    xTaskCreate(
+      io_read_chanel_state, // Function to run
+      "io_read_chanel_state", // Name of the task
+      2048, // Stack size in bytes
+      channelStateQueue, // Parameter to pass to the task
+      1, // Task priority
+      NULL // Task handle (not used here)
+    );
+
+    // Wait for the queue to receive a message
+    if (xQueueReceive(channelStateQueue, &current_state, portMAX_DELAY) == pdTRUE) {
+      debug_msg(DEBUG_PARTIAL_IO, "Received channel state from queue", false, 0);
+    } else {
+      debug_msg(DEBUG_PARTIAL_IO, "Failed to receive channel state from queue", false, 0);
+    }
+
+    //check curent state and set led colors
+    for (size_t i = 1; i < sizeof(pin_names[0]); i++) {
+      if (pin_names[i]->is_faulted){
+        strip.setPixelColor(pin_names[i]->io_chanel_number, strip.Color(255, 255, 0)); // yelow for faulted channels
+      } else if ((current_state >> i) & 0x01) {
+        strip.setPixelColor(pin_names[i]->io_chanel_number, strip.Color(0, 255, 0)); // green for active channels
+      } else {
+        strip.setPixelColor(pin_names[i]->io_chanel_number, strip.Color(255, 0, 0)); // red for inactive channels
+      }
+    }
+    strip.show();
+
+    vTaskDelay(pdMS_TO_TICKS(1000));
+  }
+
 }
 
 

@@ -8,6 +8,11 @@
 #include "adc.h"
 #include "driver/twai.h"
 
+//status vars
+bool can_device_fult = false;
+bool can_normal_operateing_mode = true;
+
+
 
 /**
  * @brief Sends a CAN frame using the TWAI (CAN) driver.
@@ -323,7 +328,8 @@ void can_message_received_handler_task(void *pvParameters) {
 
       // determine broadcast message type
       switch (received_message.data[0]) {
-        case can_paket_type_heartbeat:
+        case can_paket_type_heartbeat: 
+        {
           debug_msg(DEBUG_PARTIAL_CAN, "Received a heartbeat message", false, 0);
 
           // determine what module the heartbeat is from
@@ -336,7 +342,9 @@ void can_message_received_handler_task(void *pvParameters) {
             }
           }
           break;
-        case can_paket_type_module_fult:
+        }
+        case can_paket_type_module_fult: 
+        {
           debug_msg(DEBUG_PARTIAL_CAN, "Received a module fault message. Module ID:", true, received_message.id);
           debug_msg(DEBUG_PARTIAL_CAN, "Fault status set to true for module ID:", true, received_message.id);
 
@@ -349,6 +357,7 @@ void can_message_received_handler_task(void *pvParameters) {
             }
           }
           break;
+        }
       }
     }
   } else if (received_message.id == can_module_disrabution_controler.bus_id) {
@@ -374,7 +383,7 @@ void can_message_received_handler_task(void *pvParameters) {
         "can_rtr_handler",            // Name of the task
         2048,                        // Stack size in words
         rtr_message_ptr,             // Task parameters (pointer to received message)
-        parent_priority,             // Task priority
+        (parent_priority) - 1,             // Task priority
         NULL                         // Task handle
       );
 
@@ -491,6 +500,31 @@ void can_message_received_handler_task(void *pvParameters) {
 }
 
 
+/**
+ * @brief Task handler for processing CAN Remote Transmission Request (RTR) messages.
+ *
+ * This FreeRTOS task handles incoming CAN RTR messages by parsing the message type
+ * and performing the appropriate action, such as reading IO states, ADC values,
+ * device status, channel current limits, channel currents, or total current.
+ * The results are sent back over the CAN bus as response messages.
+ *
+ * The function expects a dynamically allocated pointer to a `struct message` as its parameter,
+ * which it takes ownership of and deletes after use.
+ *
+ * Supported CAN packet types handled:
+ * - can_paket_type_io_state: Reads and returns the current IO channel states.
+ * - can_paket_type_adc_read: Reads and returns the ADC value for a specified channel.
+ * - can_paket_type_status: Returns the current device status and timestamp.
+ * - can_paket_type_chanel_set_curent_limit: Returns the current limit for a specified channel.
+ * - can_paket_type_chanel_current: Returns the current reading for a specified channel.
+ * - can_paket_type_total_current: Returns the total current across all channels.
+ *
+ * For each supported type, the function may create additional tasks to perform
+ * asynchronous IO or ADC reads, and uses FreeRTOS queues for inter-task communication.
+ * After processing, the task deletes itself.
+ *
+ * @param pvParameters Pointer to a dynamically allocated `struct message` containing the received CAN message.
+ */
 void can_rtr_message_handler_taks (void *pvParameters) {
   // Cast the parameter to a pointer to struct message
   struct message* received_message_ptr = (struct message*)pvParameters;
@@ -505,8 +539,15 @@ void can_rtr_message_handler_taks (void *pvParameters) {
 
   debug_msg(DEBUG_PARTIAL_CAN, "can_rtr_message_handler_taks called", false, 0);
 
+  // Declare variables used in multiple cases before the switch to avoid jump errors
+  struct message outgoing_message;
+  uint16_t curent_limit = 0;
+  uint16_t channel_current = 0;
+  uint16_t total_current = 0;
+
   switch (received_message.data[0]) {
     case can_paket_type_io_state:
+    {
       debug_msg(DEBUG_PARTIAL_CAN, "RTR for IO state received", false, 0);
       
       //create state vars
@@ -542,7 +583,9 @@ void can_rtr_message_handler_taks (void *pvParameters) {
       xQueueReset(channelStateQueue); // Reset the queue for future use
 
       break;
+    }
     case can_paket_type_adc_read:
+    {
       debug_msg(DEBUG_PARTIAL_CAN, "RTR for ADC read received", false, 0);
       // create vars
       uint16_t vref_reading = 0;
@@ -581,7 +624,6 @@ void can_rtr_message_handler_taks (void *pvParameters) {
       } else {
         debug_msg(DEBUG_PARTIAL_CAN, "Failed to read ADC channel", false, 0);
       }
-      break;
 
       vref_reading = analogRead(ref_12v.pin_number); // Read the Vref pin
 
@@ -594,32 +636,216 @@ void can_rtr_message_handler_taks (void *pvParameters) {
       adc_reading_message.data[5] = (vref_reading >> 8) & 0xFF; // Set the low byte of Vref reading
 
       can_send_frame(adc_reading_message); // Send the ADC reading message
+
       debug_msg(DEBUG_PARTIAL_CAN, "ADC reading message sent", false, 0);
       // Clean up the queue after use
       xQueueReset(adc_reading_queue); // Reset the queue for future use
       break;
+    }
       
     case can_paket_type_status:
+    {
       debug_msg(DEBUG_PARTIAL_CAN, "RTR for status received", false, 0);
-      // Handle RTR for status
-      // This could involve sending the current status of the system back to the requester
+      // setup vars
+      uint32_t curent_time = 0;
+
+      //read curent time 
+      curent_time = millis();
+
+      // load data into strct
+      outgoing_message.id = received_message.id;
+      outgoing_message.extended = received_message.extended;
+      outgoing_message.type = FRAME_DATA;
+      outgoing_message.single_shot = false;
+
+      //load message data
+      outgoing_message.data[0] = can_paket_type_status;
+      outgoing_message.data[1] |= can_device_fult & 0x01;
+      outgoing_message.data[1] |= (can_normal_operateing_mode & 0x01) << 1;
+      outgoing_message.data[1] |= (io_allow_off_road & 0x01) << 2;
+      outgoing_message.data[1] |= (io_blackout_enabled & 0x01) << 3;
+      outgoing_message.data[2] = curent_time & 0xFF;
+      outgoing_message.data[3] = (curent_time >> 8) & 0xFF;
+      outgoing_message.data[4] = (curent_time >> 16) & 0xFF;
+      outgoing_message.data[5] = (curent_time >> 24) & 0xFF;
+
+      can_send_frame(outgoing_message);
+      
       break;
-    case can_paket_type_chanel_set_curent_limit:
+    }
+    case can_paket_type_chanel_set_curent_limit: {
       debug_msg(DEBUG_PARTIAL_CAN, "RTR for channel set current limit received", false, 0);
-      // Handle RTR for channel set current limit
-      // This could involve sending the current limit of a specific channel back to the requester
+      
+      // find what chanel the sender is requesting
+      for (size_t i = 1; i < sizeof(pin_names) / sizeof(pin_names[0]); i++) {
+          if (pin_names[i]->pin_mode == analog_in) {
+            if (pin_names[i]->io_chanel_number == received_message.data[1]) {
+              //read the curnt limit
+              curent_limit = *(pin_names[i]->chanel_curent_limit_pointer);
+
+              break;
+            }
+          }
+      }
+
+      //load data into outgoing mesage
+      outgoing_message.id = received_message.id;
+      outgoing_message.extended =received_message.extended;
+      outgoing_message.type = FRAME_DATA;
+      outgoing_message.single_shot = false;
+      outgoing_message.data[0] = can_paket_type_chanel_set_curent_limit;
+      outgoing_message.data[1] = received_message.data[1];
+      outgoing_message.data[2] = curent_limit & 0xFF;
+      outgoing_message.data[3] = (curent_limit >> 8) & 0xFF;
+
+      //send data
+      can_send_frame(outgoing_message);
+
       break;
-    case can_paket_type_total_current:
+    }
+    case can_paket_type_chanel_current: {
+      debug_msg(DEBUG_PARTIAL_CAN, "RTR for channel current received", false, 0);
+
+      // find what chanel the sender is requesting
+      for (size_t i = 1; i < sizeof(pin_names) / sizeof(pin_names[0]); i++) {
+        if (pin_names[i]->pin_mode == analog_in) {
+          if (pin_names[i]->io_chanel_number == received_message.data[1]) {
+            //read the channel current
+            channel_current = *(pin_names[i]->chanel_curent_limit_pointer);
+
+            debug_msg(DEBUG_PARTIAL_CAN, "Channel current read successfully", true, channel_current);
+            
+          }
+        }
+      }
+
+      //load data into outgoing message
+      outgoing_message.id = received_message.id;
+      outgoing_message.extended = received_message.extended;
+      outgoing_message.type = FRAME_DATA;
+      outgoing_message.single_shot = false;
+      outgoing_message.data[0] = can_paket_type_chanel_current;
+      outgoing_message.data[1] = received_message.data[1]; // Channel number
+      outgoing_message.data[2] = channel_current & 0xFF; // Low byte of channel current
+      outgoing_message.data[3] = (channel_current >> 8) & 0xFF; // High byte of channel current
+
+      //send data
+      can_send_frame(outgoing_message);
+      debug_msg(DEBUG_PARTIAL_CAN, "Channel current message sent", false, 0);
+
+      break;
+    }
+    case can_paket_type_total_current: {
       debug_msg(DEBUG_PARTIAL_CAN, "RTR for total current received", false, 0);
-      // Handle RTR for total current
-      // This could involve sending the total current consumption back to the requester
+      
+      // calculate total current
+      total_current = 0;
+      for (size_t i = 1; i < sizeof(pin_names) / sizeof(pin_names[0]); i++) {
+        if (pin_names[i]->pin_mode == analog_in) {
+          total_current += *(pin_names[i]->chanel_curent_limit_pointer);
+        }
+      }
+
+      //load data into outgoing message
+      outgoing_message.id = received_message.id;
+      outgoing_message.extended = received_message.extended;
+      outgoing_message.type = FRAME_DATA;
+      outgoing_message.single_shot = false;
+      outgoing_message.data[0] = can_paket_type_total_current; // Set the first byte to the total current packet type
+      outgoing_message.data[1] = total_current & 0xFF; // Low byte of total current
+      outgoing_message.data[2] = (total_current >> 8) & 0xFF; // High byte of total current
+
+      //send data
+
+      can_send_frame(outgoing_message);
       break;
+    }
     default:
       debug_msg(DEBUG_PARTIAL_CAN, "Unknown RTR type received", false, 0);
       break;
   }
 
   vTaskDelete(NULL); // Delete the task after processing
+}
+
+/**
+ * @brief Sends a CAN heartbeat message and deletes the calling task.
+ *
+ * This function constructs a CAN heartbeat message using the module's broadcast bus ID
+ * and the predefined heartbeat packet type. It sends the message over the CAN bus,
+ * logs debug information before and after sending, and then deletes the FreeRTOS task
+ * that invoked it.
+ *
+ * @param pvParameters Pointer to task parameters (unused).
+ */
+void can_send_heartbeat(void *pvParameters) {
+  debug_msg(DEBUG_PARTIAL_CAN, "can_send_heartbeat called", false, 0);
+
+  //setup message
+  struct message heartbeat_message;
+  while (true) {
+    heartbeat_message.id = can_module_brodcast.bus_id;
+    heartbeat_message.extended = false;
+    heartbeat_message.type = FRAME_DATA; // Set the frame type to data
+    heartbeat_message.single_shot = false; // Set single shot flag to false
+    heartbeat_message.data[0] = can_paket_type_heartbeat; // Set the first byte to the heartbeat packet type
+
+    //send message
+    can_send_frame(heartbeat_message);
+    
+    debug_msg(DEBUG_PARTIAL_CAN, "Heartbeat message sent", false, 0);
+
+    vTaskDelay(pdMS_TO_TICKS(can_heartbeat_interval)); // Delay to ensure the message is sent before next heartbeat
+  }
+}
+
+/**
+ * @brief Monitors the heartbeat status of CAN modules and broadcasts status updates.
+ *
+ * This function runs in a continuous loop, periodically checking if each CAN module
+ * has sent a heartbeat within the allowed timeout interval. If a module fails to send
+ * a heartbeat in time, it is marked as not alive, and a heartbeat message is broadcasted
+ * to notify other components of its status. The function uses FreeRTOS delay to avoid
+ * busy-waiting.
+ *
+ * @param pvParameters Pointer to parameters for the task (unused).
+ *
+ * Heartbeat messages are sent with the following data:
+ *   - data[0]: Heartbeat packet type identifier.
+ *   - data[1]: Lower byte of the module's bus ID.
+ *   - data[2]: Upper byte of the module's bus ID.
+ *
+ * Debug messages are logged for status changes and message transmissions.
+ */
+void can_check_heartbeat_timer(void *pvParameters) {
+  debug_msg(DEBUG_PARTIAL_CAN, "can_check_heartbeat_timer called", false, 0);
+
+  //setup vars
+  struct  message heartbeat_message;
+  heartbeat_message.id = can_module_brodcast.bus_id;
+  heartbeat_message.extended = false;
+  heartbeat_message.type = FRAME_DATA; // Set the frame type to data
+  heartbeat_message.single_shot = false; // Set single shot flag to false
+  heartbeat_message.data[0] = can_paket_type_heartbeat; // Set the first byte to the heartbeat packet type
+
+  // Continuously check if the last heartbeat was received within the interval
+  while (true) {
+    for (size_t i = 1; i < sizeof(can_modules) / sizeof(can_modules[0]); i++) {
+      if (can_modules[i]->is_alive && (millis() - can_modules[i]->last_heartbeat > can_heartbeat_timeout)) {
+        can_modules[i]->is_alive = false;
+        debug_msg(DEBUG_PARTIAL_CAN, "Module with ID:", true, can_modules[i]->bus_id);
+        debug_msg(DEBUG_PARTIAL_CAN, "is not alive anymore", false, 0);
+
+        heartbeat_message.data[1] = can_modules[i]->bus_id & 0xFF; // Set the module ID in the heartbeat message
+        heartbeat_message.data[2] = (can_modules[i]->bus_id >> 8) & 0xFF; // Set the module ID in the heartbeat message
+
+        // Send the heartbeat message indicating the module is not alive
+        can_send_frame(heartbeat_message);
+        debug_msg(DEBUG_PARTIAL_CAN, "Heartbeat message sent for module with ID:", true, can_modules[i]->bus_id);
+      }
+    }
+    vTaskDelay(pdMS_TO_TICKS(10000)); // Add a delay to avoid busy-waiting
+  }
 }
 
 

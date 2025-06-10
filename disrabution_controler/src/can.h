@@ -47,10 +47,23 @@ struct message {
     bool single_shot;    // Single shot transmission flag
 };
 
+//status vars
+extern bool can_device_fult;
+extern bool can_normal_operateing_mode;
+
+//heartbeat interval in milliseconds
+const unsigned long can_heartbeat_interval = 5000;
+const unsigned long can_heartbeat_timeout = 30000;
+
+
 //function definitions
 void can_init();
 void can_send_frame(uint32_t id, const uint8_t data[8],enum frame_type type, bool single_shot);
 void can_check_for_alerts (void *pvParameters);
 struct message can_read_recived_frame();
+void can_send_heartbeat(void *pvParameters);
+void can_check_heartbeat_timer(void *pvParameters);
+void can_message_received_handler_task(void *pvParameters);
+void can_rtr_message_handler_taks (void *pvParameters);
 
 #endif // can_h

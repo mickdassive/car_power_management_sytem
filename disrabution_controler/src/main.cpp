@@ -13,6 +13,7 @@ void setup() {
   // init gpio and adc
   io_gpio_init();
   adc_init(true);
+  io_led_init();
 
   // init can bus
   can_init();
@@ -32,6 +33,33 @@ void setup() {
     "can alert handler", // Name of the task
     2048, // Stack size in words
     NULL, // Task parameters
+    2, // Task priority
+    NULL // Task handle
+  );
+
+  xTaskCreate(
+    can_send_heartbeat, // Task function
+    "can alert handler", // Name of the task
+    2048, // Stack size in words
+    NULL, // Task parameters
+    1, // Task priority
+    NULL // Task handle
+  );
+
+  xTaskCreate(
+    can_check_heartbeat_timer, // Task function
+    "can heartbeat monitor", // Name of the task
+    2048, // Stack size in words
+    NULL, // Task parameters
+    1, // Task priority
+    NULL // Task handle
+  );
+
+  xTaskCreate(
+    io_led_handler, // Task function
+    "io led handler", // Name of the task
+    2048, // Stack size in words
+    NULL, // Task parameters
     1, // Task priority
     NULL // Task handle
   );
@@ -44,7 +72,3 @@ void loop() {
 
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
-}

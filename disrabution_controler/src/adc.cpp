@@ -837,6 +837,22 @@ int adc_read(struct pin pin_needed) {
 
 }
 
+/**
+ * @brief RTOS task wrapper for reading ADC value from a specified pin.
+ *
+ * This function is intended to be used as a FreeRTOS task entry point. It reads the ADC value
+ * from the pin specified by the argument, sends the value to a queue if the read is successful,
+ * and then deletes itself. Debug messages are logged at various stages for monitoring.
+ *
+ * @param arg Pointer to a struct pin specifying which pin to read from. Must not be NULL.
+ *
+ * The function performs the following steps:
+ * 1. Casts the argument to a struct pin pointer.
+ * 2. Reads the ADC value from the specified pin.
+ * 3. If the read is successful (adc_value != -1), sends the value to adc_reading_queue.
+ * 4. Logs debug messages for tracing execution and errors.
+ * 5. Deletes the task upon completion.
+ */
 void adc_read_rtos_wraper(void *arg) {
 
   debug_msg(DEBUG_PARTAL_ADC, "adc_read_rtos_wraper called", false, 0);
@@ -1015,7 +1031,7 @@ void adc_set_ch_current_limit_rtos_wraper (void * peram) {
 
   adc_set_ch_current_limit(*pin_needed, current_limit); // Call the actual function with the pin structure and current limit
 
-  delete peram; // Delete the parameter to free memory
+  delete (struct pin *)peram; // Delete the parameter to free memory
 
   vTaskDelete(NULL); // Delete the task after completion
 }
@@ -1118,6 +1134,9 @@ void IRAM_ATTR adc_alert_handler (struct pin alert_pin) {
     debug_msg(DEBUG_PARTAL_ADC, "current limit exceeded on alerting channel", false, 0);
     io_call(gate_pin, WRITE, low);
     adc_event_clear(alert_source); // Clear the alert for the source channel
+
+    //set fault state for the alert source
+    gate_pin.is_faulted = true; // Set the fault state for the gate pin
       
   } else {
     debug_msg(DEBUG_PARTAL_ADC, "current limit not exceeded on alert source", false, 0);
@@ -1169,6 +1188,8 @@ void adc_monitor_periral_ch_current(void * parameter) {
     if (ciurrent_csn_voltage < min_csn_voltage) {
       debug_msg(DEBUG_PARTAL_ADC, "current limit exceeded on peripheral power channel", false, 0);
       io_call(peripheral_pwr_csn, WRITE, low); // Disable the peripheral power channel
+
+      peripheral_pwr_csn.is_faulted = true; // Set the fault state for the peripheral power channel
 
     } else {
       debug_msg(DEBUG_PARTAL_ADC, "current limit not exceeded on peripheral power channel", false, 0);
