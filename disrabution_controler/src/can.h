@@ -43,6 +43,7 @@ struct message {
     uint32_t id;          // CAN identifier
     bool extended;  // Extended frame flag (true for extended, false for standard)
     uint8_t data[8];     // Data bytes (up to 8 bytes)
+    int data_length_code; // Length of the data (0-8 bytes)
     enum frame_type type; // Type of frame (data or RTR)
     bool single_shot;    // Single shot transmission flag
 };
@@ -64,6 +65,6 @@ struct message can_read_recived_frame();
 void can_send_heartbeat(void *pvParameters);
 void can_check_heartbeat_timer(void *pvParameters);
 void can_message_received_handler_task(void *pvParameters);
-void can_rtr_message_handler_taks (void *pvParameters);
+void can_rtr_message_handler_task (void *pvParameters);
 
 #endif // can_h

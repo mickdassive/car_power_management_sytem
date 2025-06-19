@@ -18,7 +18,9 @@ bool can_normal_operateing_mode = true;
  * @brief Sends a CAN frame using the TWAI (CAN) driver.
  *
  * This function prepares a CAN frame based on the provided message structure
- * and attempts to transmit it immediately. If the transmit buffer is full,
+ * and attempts to transmit it immediately. The data length is determined by the
+ * 'data_length_code' member of the message struct, which must be set to the number
+ * of valid bytes in the data array. If the transmit buffer is full,
  * it logs the event and (optionally) notifies a FreeRTOS task to retry sending.
  *
  * @param message_to_send The message structure containing CAN frame parameters:
@@ -27,6 +29,7 @@ bool can_normal_operateing_mode = true;
  *   - type: Frame type (e.g., data or RTR).
  *   - single_shot: Whether to use single shot transmission.
  *   - data: Array of data bytes to send.
+ *   - data_length_code: Number of valid bytes in the data array to send.
  *
  * @note
  * - The function uses debug_msg for logging.
@@ -34,10 +37,19 @@ bool can_normal_operateing_mode = true;
  *   is possible (see commented code).
  * - Assumes the existence of a FreeRTOS task handle (canSenderTaskHandle) if
  *   notification is enabled.
+ * - If the data array is not fully used, only the first 'data_length_code' bytes are sent.
  */
 void can_send_frame(struct message message_to_send) {
 
   debug_msg(DEBUG_PARTIAL_CAN, "can_send_frame called", false, 0);
+
+  // Calculate data length code based on number of non-zero bytes in data
+  uint8_t dlc = 0;
+  for (int i = 0; i < 8; i++) {
+    if (message_to_send.data[i] != 0) {
+      dlc = i + 1;
+    }
+  }
 
   //setup frame
   twai_message_t frame;
@@ -45,9 +57,9 @@ void can_send_frame(struct message message_to_send) {
   frame.rtr = (message_to_send.type == FRAME_RTR); // Set RTR flag if frame type is RTR
   frame.ss = message_to_send.single_shot; // Set single shot transmission flag
   frame.identifier = message_to_send.id; // Set the CAN ID
-  frame.data_length_code = sizeof(message_to_send.data); // Set the data length code
-  for (int i = 0; i < sizeof(message_to_send.data); i++) {
-    frame.data[i] = message_to_send.data[i]; // Copy data bytes into the frame
+  frame.data_length_code = dlc; // Set the data length code to number of non-zero bytes
+  for (int i = 0; i < dlc; i++) {
+    frame.data[i] = message_to_send.data[i]; // Copy only valid data bytes into the frame
   }
 
   // Try to send frame without blocking indefinitely
@@ -118,15 +130,15 @@ void can_init() {
   }
 
   // setup alerts
-twai_reconfigure_alerts(
-  TWAI_ALERT_TX_IDLE |
-  TWAI_ALERT_TX_SUCCESS |
-  TWAI_ALERT_RX_DATA |
-  TWAI_ALERT_BUS_ERROR |
-  TWAI_ALERT_TX_FAILED |
-  TWAI_ALERT_RX_QUEUE_FULL,
-  nullptr
-);
+  twai_reconfigure_alerts(
+    TWAI_ALERT_TX_IDLE |
+    TWAI_ALERT_TX_SUCCESS |
+    TWAI_ALERT_RX_DATA |
+    TWAI_ALERT_BUS_ERROR |
+    TWAI_ALERT_TX_FAILED |
+    TWAI_ALERT_RX_QUEUE_FULL,
+    nullptr
+  );
 
   debug_msg(DEBUG_PARTIAL_CAN, "CAN bus initialized", false, 0);
 
@@ -144,27 +156,28 @@ twai_reconfigure_alerts(
  * @return struct message The received CAN message. If no frame is received or an error occurs,
  *         the returned struct may contain uninitialized data.
  */
-struct message can_read_recived_frame() {
+struct message can_read_received_frame() {
   debug_msg(DEBUG_PARTIAL_CAN, "can_read_received_frame called", false, 0);
 
   twai_message_t frame;
-  struct message recived_message;
+  struct message received_message;
 
   // Read a frame from the TWAI bus
   if (twai_receive(&frame, pdMS_TO_TICKS(1000)) == ESP_OK) {
     debug_msg(DEBUG_PARTIAL_CAN, "Frame received successfully", false, 0);
-    recived_message.id = frame.identifier;
-    recived_message.extended = frame.extd;
-    recived_message.type = (frame.rtr) ? FRAME_RTR : FRAME_DATA;
-    recived_message.single_shot = frame.ss;
+    received_message.id = frame.identifier;
+    received_message.extended = frame.extd;
+    received_message.type = (frame.rtr) ? FRAME_RTR : FRAME_DATA;
+    received_message.single_shot = frame.ss;
+    received_message.data_length_code = frame.data_length_code;
     for (int i = 0; i < frame.data_length_code; i++) {
-      recived_message.data[i] = frame.data[i];
+      received_message.data[i] = frame.data[i];
     }
   } else {
     debug_msg(DEBUG_PARTIAL_CAN, "No frame received or error occurred", false, 0);
   }
 
-  return recived_message;
+  return received_message;
 }
 
 /**
@@ -191,58 +204,62 @@ void can_check_for_alerts (void *pvParameters) {
 
   debug_msg(DEBUG_PARTIAL_CAN, "can_check_for_alerts called", false, 0);
 
-  uint32_t triggerd_alerts;
+  uint32_t triggered_alerts;
 
   for (;;) {
 
-    twai_read_alerts(&triggerd_alerts, pdMS_TO_TICKS(100));
+    twai_read_alerts(&triggered_alerts, pdMS_TO_TICKS(100));
 
-    if (triggerd_alerts & TWAI_ALERT_TX_IDLE) {
+    if (triggered_alerts & TWAI_ALERT_TX_IDLE) {
 
       debug_msg(DEBUG_PARTIAL_CAN, "TX Idle no more messages to send", false, 0);
 
-    } else if (triggerd_alerts & TWAI_ALERT_TX_SUCCESS) {
+    } else if (triggered_alerts & TWAI_ALERT_TX_SUCCESS) {
 
-      debug_msg(DEBUG_PARTIAL_CAN, "can frame sent sucessfuly", false, 0);
+      debug_msg(DEBUG_PARTIAL_CAN, "can frame sent successfully", false, 0);
 
-    } else if (triggerd_alerts & TWAI_ALERT_RX_DATA) {
+    } else if (triggered_alerts & TWAI_ALERT_RX_DATA) {
 
       debug_msg(DEBUG_PARTIAL_CAN, "RX Data alert triggered", false, 0);
 
       // Read the received CAN frame
-      struct message recived_message = can_read_recived_frame();
+      struct message received_message = can_read_received_frame();
 
       // Allocate memory for the message to pass to the handler task
-      struct message* recived_message_ptr = new struct message(recived_message);
-      if (recived_message_ptr == nullptr) {
+      struct message* received_message_ptr = new struct message(received_message);
+      if (received_message_ptr == nullptr) {
         debug_msg(DEBUG_PARTIAL_CAN, "can_message_received_handler_task: memory allocation failed", false, 0);
         vTaskDelete(NULL);
         return;
       }
 
       // Get the current task's priority to inherit
-      UBaseType_t parent_priority = uxTaskPriorityGet(NULL);
+      UBaseType_t current_task_priority = uxTaskPriorityGet(NULL);
       // Create the handler task
-      xTaskCreate(
+      BaseType_t taskCreated = xTaskCreate(
         can_message_received_handler_task, // Task function
         "can_message_received_handler",    // Name of the task
         2048,                             // Stack size in words
-        recived_message_ptr,              // Task parameters (pointer to received message)
-        parent_priority,                  // Task priority
+        received_message_ptr,             // Task parameters (pointer to received message)
+        current_task_priority,             // Task priority
         NULL                              // Task handle
       );
+      if (taskCreated != pdPASS) {
+        debug_msg(DEBUG_PARTIAL_CAN, "Failed to create can_message_received_handler_task", false, 0);
+        delete received_message_ptr;
+      }
 
-    } else if (triggerd_alerts & TWAI_ALERT_BUS_ERROR) {
+    } else if (triggered_alerts & TWAI_ALERT_BUS_ERROR) {
 
       debug_msg(DEBUG_PARTIAL_CAN, "Bus Error alert triggered", false, 0);
 
-    } else if (triggerd_alerts & TWAI_ALERT_TX_FAILED) {
+    } else if (triggered_alerts & TWAI_ALERT_TX_FAILED) {
 
       debug_msg(DEBUG_PARTIAL_CAN, "TX Failed alert triggered", false, 0);
 
-    } else if (triggerd_alerts & TWAI_ALERT_RX_QUEUE_FULL) {
+    } else if (triggered_alerts & TWAI_ALERT_RX_QUEUE_FULL) {
 
-      debug_msg(DEBUG_PARTIAL_CAN, "RX Queue Full alert triggered", false, 0);
+      debug_msg(DEBUG_PARTIAL_CAN, "RX queue full alert triggered", false, 0);
       
     }
 
@@ -271,6 +288,8 @@ void can_check_for_alerts (void *pvParameters) {
  * - Creating RTOS tasks for ADC current limit and IO channel control operations.
  * - Logging debug messages for all significant events and message types.
  *
+ * After processing the message, the task deletes itself using vTaskDelete(NULL).
+ *
  * @param pvParameters Pointer to a dynamically allocated `struct message` containing the received CAN message.
  *                    The memory is freed within the function.
  *
@@ -286,7 +305,19 @@ void can_message_received_handler_task(void *pvParameters) {
     vTaskDelete(NULL);
     return;
   }
-  struct message received_message = *received_message_ptr;
+  // Deep copy received_message_ptr to received_message
+  struct message received_message;
+  received_message.id = received_message_ptr->id;
+  received_message.extended = received_message_ptr->extended;
+  received_message.type = received_message_ptr->type;
+  received_message.single_shot = received_message_ptr->single_shot;
+  received_message.data_length_code = received_message_ptr->data_length_code;
+  // Deep copy the data array (assuming data is a fixed-size array)
+  for (int i = 0; i < 8; ++i) {
+    received_message.data[i] = received_message_ptr->data[i];
+  }
+  // If there are any pointer members in struct message, deep copy them here
+
   // Free the parameter memory if it was dynamically allocated
   delete received_message_ptr;
 
@@ -307,86 +338,20 @@ void can_message_received_handler_task(void *pvParameters) {
       // Allocate memory for the message to pass to the handler task
       struct message* rtr_message_ptr = new struct message(received_message);
       if (rtr_message_ptr == nullptr) {
-        debug_msg(DEBUG_PARTIAL_CAN, "can_rtr_message_handler_taks: memory allocation failed", false, 0);
+        debug_msg(DEBUG_PARTIAL_CAN, "Failed to allocate memory for RTR handler", false, 0);
         vTaskDelete(NULL);
         return;
       }
-      // Inherit the parent thread's priority
-      UBaseType_t parent_priority = uxTaskPriorityGet(NULL);
+      // Inherit the current task's priority
+      UBaseType_t current_task_priority = uxTaskPriorityGet(NULL);
       xTaskCreate(
-        can_rtr_message_handler_taks, // Task function
+        can_rtr_message_handler_task, // Task function
         "can_rtr_handler",            // Name of the task
         2048,                        // Stack size in words
         rtr_message_ptr,             // Task parameters (pointer to received message)
-        parent_priority,             // Task priority
+        current_task_priority,        // Task priority
         NULL                         // Task handle
       );
-
-    } else {
-
-      debug_msg(DEBUG_PARTIAL_CAN, "Received a data message", false, 0);
-
-      // determine broadcast message type
-      switch (received_message.data[0]) {
-        case can_paket_type_heartbeat: 
-        {
-          debug_msg(DEBUG_PARTIAL_CAN, "Received a heartbeat message", false, 0);
-
-          // determine what module the heartbeat is from
-          for (size_t i = 1; i < sizeof(can_modules) / sizeof(can_modules[0]); i++) {
-            if (can_modules[i]->bus_id == received_message.id) {
-              can_modules[i]->last_heartbeat = millis();
-              can_modules[i]->is_alive = true;
-              debug_msg(DEBUG_PARTIAL_CAN, "Heartbeat from module with ID:", true, can_modules[i]->bus_id);
-              break;
-            }
-          }
-          break;
-        }
-        case can_paket_type_module_fult: 
-        {
-          debug_msg(DEBUG_PARTIAL_CAN, "Received a module fault message. Module ID:", true, received_message.id);
-          debug_msg(DEBUG_PARTIAL_CAN, "Fault status set to true for module ID:", true, received_message.id);
-
-          // determine what module the fault is from
-          for (size_t i = 1; i < sizeof(can_modules[0]); i++) {
-            if (can_modules[i]->bus_id == received_message.id) {
-              can_modules[i]->if_faulted = true;
-              debug_msg(DEBUG_PARTIAL_CAN, "Fault from module with ID:", true, can_modules[i]->bus_id);
-              break;
-            }
-          }
-          break;
-        }
-      }
-    }
-  } else if (received_message.id == can_module_disrabution_controler.bus_id) {
-    debug_msg(DEBUG_PARTIAL_CAN, "Received a message for distribution controller", false, 0);
-
-    // check if we received an RTR message
-    if (received_message.type == FRAME_RTR) {
-      debug_msg(DEBUG_PARTIAL_CAN, "Received a RTR message for distribution controller", false, 0);
-
-      //call rtr handler and pass message
-
-      // Allocate memory for the message to pass to the handler task
-      struct message* rtr_message_ptr = new struct message(received_message);
-      if (rtr_message_ptr == nullptr) {
-        debug_msg(DEBUG_PARTIAL_CAN, "can_rtr_message_handler_taks: memory allocation failed", false, 0);
-        vTaskDelete(NULL);
-        return;
-      }
-      // Inherit the parent thread's priority
-      UBaseType_t parent_priority = uxTaskPriorityGet(NULL);
-      xTaskCreate(
-        can_rtr_message_handler_taks, // Task function
-        "can_rtr_handler",            // Name of the task
-        2048,                        // Stack size in words
-        rtr_message_ptr,             // Task parameters (pointer to received message)
-        (parent_priority) - 1,             // Task priority
-        NULL                         // Task handle
-      );
-
     } else {
       debug_msg(DEBUG_PARTIAL_CAN, "Received a data message for distribution controller", false, 0);
 
@@ -424,7 +389,7 @@ void can_message_received_handler_task(void *pvParameters) {
           debug_msg(DEBUG_PARTIAL_CAN, "Received channel set current limit message", false, 0);
 
           // find pin that needs to be set
-          for (size_t i = 1; i < sizeof(pin_names) / sizeof(pin_names[0]); i++) {
+          for (size_t i = 0; i < sizeof(pin_names) / sizeof(pin_names[0]); i++) {
             if (pin_names[i]->pin_mode == analog_in) {
               if (pin_names[i]->io_chanel_number == received_message.data[1]) {
                 // Capture the current pin pointer and current_limit in a struct to pass to the task
@@ -432,31 +397,32 @@ void can_message_received_handler_task(void *pvParameters) {
                   pin* p;
                   uint current_limit;
                 };
-                AdcTaskParams* params = new AdcTaskParams{
-                  pin_names[i],
-                  (uint)((received_message.data[2] << 8) | received_message.data[3])
-                };
-                // Inherit the parent thread's priority
-                UBaseType_t parent_priority = uxTaskPriorityGet(NULL);
+                AdcTaskParams* params = new AdcTaskParams{pin_names[i], (uint)received_message.data[2]};
+                if (params == nullptr) {
+                  debug_msg(DEBUG_PARTIAL_CAN, "Failed to allocate memory for AdcTaskParams", false, 0);
+                  break;
+                }
+                // Inherit the current task's priority
+                UBaseType_t current_task_priority = uxTaskPriorityGet(NULL);
                 xTaskCreate([](void* pvParameters) {
                     AdcTaskParams* taskParams = static_cast<AdcTaskParams*>(pvParameters);
-                    adc_set_ch_current_limit_rtos_wraper(taskParams);
-                    delete taskParams; // Free the allocated memory
+                    if (taskParams) {
+                      adc_set_ch_current_limit_rtos_wraper(taskParams);
+                      delete taskParams; // Free the allocated memory
+                    }
                     vTaskDelete(NULL); // Delete the task
-                }, "adc_set_chanel_current_limit", 2048, (void*)params, parent_priority, NULL);
+                }, "adc_set_chanel_current_limit", 2048, (void*)params, current_task_priority, NULL);
                 break; // Exit the loop once the pin is found and task is created
               }
             }
           }
-
           break;
         case can_paket_type_chanel_control:
           debug_msg(DEBUG_PARTIAL_CAN, "Received channel control message", false, 0);
 
-          // find pin that needs to be controlled
-          for (size_t i = 1; i < sizeof(pin_names[0]); i++) {
+          for (size_t i = 0; i < sizeof(pin_names) / sizeof(pin_names[0]); i++) {
             if (pin_names[i]->pin_mode == out) {
-              if (pin_names[i]->io_chanel_number == received_message.data[6]) {
+              if (pin_names[i]->io_chanel_number == received_message.data[1]) {
 
                 // Prepare parameters for the RTOS task
                 struct IoTaskParams {
@@ -465,7 +431,7 @@ void can_message_received_handler_task(void *pvParameters) {
                 };
 
                 high_low state;
-                if ((received_message.data[2] & 0x80) == 0) {
+                if ((received_message.data[2] & 0x01) == 0) {
                   debug_msg(DEBUG_PARTIAL_CAN, "Channel control message: setting pin to LOW", false, 0);
                   state = low; // Set state to low if the 7th bit is 0
                 } else {
@@ -473,12 +439,13 @@ void can_message_received_handler_task(void *pvParameters) {
                   state = high;
                 }
 
+                IoTaskParams* params = new IoTaskParams{pin_names[i], state};
+                if (params == nullptr) {
+                  debug_msg(DEBUG_PARTIAL_CAN, "Failed to allocate memory for IoTaskParams", false, 0);
+                  break;
+                }
                 // Use a lambda to ensure memory is always freed, even if io_call_rtos_wraper throws
-                IoTaskParams* params = new IoTaskParams{
-                  pin_names[i],
-                  state
-                };
-                UBaseType_t parent_priority = uxTaskPriorityGet(NULL);
+                UBaseType_t current_task_priority = uxTaskPriorityGet(NULL);
                 xTaskCreate([](void* pvParameters) {
                     IoTaskParams* taskParams = static_cast<IoTaskParams*>(pvParameters);
                     if (taskParams) {
@@ -486,7 +453,7 @@ void can_message_received_handler_task(void *pvParameters) {
                       delete taskParams; // Free the allocated memory
                     }
                     vTaskDelete(NULL); // Delete the task
-                }, "io_channel_control", 2048, (void*)params, parent_priority, NULL);
+                }, "io_channel_control", 2048, (void*)params, current_task_priority, NULL);
                 break; // Exit the loop once the pin is found
               }
             }
@@ -525,19 +492,26 @@ void can_message_received_handler_task(void *pvParameters) {
  *
  * @param pvParameters Pointer to a dynamically allocated `struct message` containing the received CAN message.
  */
-void can_rtr_message_handler_taks (void *pvParameters) {
+void can_rtr_message_handler_task (void *pvParameters) {
+
+  debug_msg(DEBUG_PARTIAL_CAN, "can_rtr_message_handler_task called", false, 0);
+
   // Cast the parameter to a pointer to struct message
   struct message* received_message_ptr = (struct message*)pvParameters;
+
+  // Check if the pointer is null before dereferencing
   if (received_message_ptr == nullptr) {
-    debug_msg(DEBUG_PARTIAL_CAN, "can_rtr_message_handler_taks: null parameter", false, 0);
+    debug_msg(DEBUG_PARTIAL_CAN, "can_rtr_message_handler_task: null parameter", false, 0);
+    // Clean up any global or static queues if needed
+    if (channelStateQueue) xQueueReset(channelStateQueue);
+    if (adc_reading_queue) xQueueReset(adc_reading_queue);
     vTaskDelete(NULL);
     return;
   }
+  
   struct message received_message = *received_message_ptr;
   // Free the parameter memory if it was dynamically allocated
   delete received_message_ptr;
-
-  debug_msg(DEBUG_PARTIAL_CAN, "can_rtr_message_handler_taks called", false, 0);
 
   // Declare variables used in multiple cases before the switch to avoid jump errors
   struct message outgoing_message;
@@ -575,6 +549,9 @@ void can_rtr_message_handler_taks (void *pvParameters) {
         debug_msg(DEBUG_PARTIAL_CAN, "IO state read successfully", false, 0);
       } else {
         debug_msg(DEBUG_PARTIAL_CAN, "Failed to read IO state", false, 0);
+        xQueueReset(channelStateQueue); // Clean up before early exit
+        vTaskDelete(NULL);
+        return;
       }
 
       can_send_frame(io_state_message); // Send the IO state message
@@ -623,6 +600,9 @@ void can_rtr_message_handler_taks (void *pvParameters) {
         debug_msg(DEBUG_PARTIAL_CAN, "ADC channel reading received", true, channel_reading);
       } else {
         debug_msg(DEBUG_PARTIAL_CAN, "Failed to read ADC channel", false, 0);
+        xQueueReset(adc_reading_queue); // Clean up before early exit
+        vTaskDelete(NULL);
+        return;
       }
 
       vref_reading = analogRead(ref_12v.pin_number); // Read the Vref pin
@@ -630,10 +610,10 @@ void can_rtr_message_handler_taks (void *pvParameters) {
       //transmit response
       adc_reading_message.data[0] = can_paket_type_adc_read; // Set the first byte to the ADC read packet type
       adc_reading_message.data[1] = pin_to_read.adc_channel; // Set the ADC channel number
-      adc_reading_message.data[2] = channel_reading & 0xFF; // Set the high byte of Vref reading
-      adc_reading_message.data[3] = (channel_reading >> 8) & 0xFF; // Set the low byte of Vref reading
-      adc_reading_message.data[4] = vref_reading & 0xFF; // Set the high byte of Vref reading
-      adc_reading_message.data[5] = (vref_reading >> 8) & 0xFF; // Set the low byte of Vref reading
+      adc_reading_message.data[2] = channel_reading & 0xFF; // Set the low byte of channel reading
+      adc_reading_message.data[3] = (channel_reading >> 8) & 0xFF; // Set the high byte of channel reading
+      adc_reading_message.data[4] = vref_reading & 0xFF; // Set the low byte of Vref reading
+      adc_reading_message.data[5] = (vref_reading >> 8) & 0xFF; // Set the high byte of Vref reading
 
       can_send_frame(adc_reading_message); // Send the ADC reading message
 
@@ -660,10 +640,11 @@ void can_rtr_message_handler_taks (void *pvParameters) {
 
       //load message data
       outgoing_message.data[0] = can_paket_type_status;
-      outgoing_message.data[1] |= can_device_fult & 0x01;
-      outgoing_message.data[1] |= (can_normal_operateing_mode & 0x01) << 1;
-      outgoing_message.data[1] |= (io_allow_off_road & 0x01) << 2;
-      outgoing_message.data[1] |= (io_blackout_enabled & 0x01) << 3;
+      outgoing_message.data[1] = 0; // Zero-initialize before setting bits
+      outgoing_message.data[1] |= (can_device_fult & 0x01);
+      outgoing_message.data[1] |= ((can_normal_operateing_mode & 0x01) << 1);
+      outgoing_message.data[1] |= ((io_allow_off_road & 0x01) << 2);
+      outgoing_message.data[1] |= ((io_blackout_enabled & 0x01) << 3);
       outgoing_message.data[2] = curent_time & 0xFF;
       outgoing_message.data[3] = (curent_time >> 8) & 0xFF;
       outgoing_message.data[4] = (curent_time >> 16) & 0xFF;
@@ -711,7 +692,12 @@ void can_rtr_message_handler_taks (void *pvParameters) {
         if (pin_names[i]->pin_mode == analog_in) {
           if (pin_names[i]->io_chanel_number == received_message.data[1]) {
             //read the channel current
-            channel_current = *(pin_names[i]->chanel_curent_limit_pointer);
+            channel_current = adc_read_ch_current(*pin_names[i]);
+
+            //read chanel current limit
+            if (pin_names[i]->chanel_curent_limit_pointer != nullptr) {
+              curent_limit = *(pin_names[i]->chanel_curent_limit_pointer);
+            }
 
             debug_msg(DEBUG_PARTIAL_CAN, "Channel current read successfully", true, channel_current);
             
@@ -728,6 +714,8 @@ void can_rtr_message_handler_taks (void *pvParameters) {
       outgoing_message.data[1] = received_message.data[1]; // Channel number
       outgoing_message.data[2] = channel_current & 0xFF; // Low byte of channel current
       outgoing_message.data[3] = (channel_current >> 8) & 0xFF; // High byte of channel current
+      outgoing_message.data[4] = curent_limit & 0xFF; // Reserved byte, can be used for future extensions
+      outgoing_message.data[5] = (curent_limit >> 8) & 0xFF; // Reserved byte, can be used for future extensions
 
       //send data
       can_send_frame(outgoing_message);
@@ -789,6 +777,7 @@ void can_send_heartbeat(void *pvParameters) {
     heartbeat_message.type = FRAME_DATA; // Set the frame type to data
     heartbeat_message.single_shot = false; // Set single shot flag to false
     heartbeat_message.data[0] = can_paket_type_heartbeat; // Set the first byte to the heartbeat packet type
+    heartbeat_message.data_length_code = 1; // Only 1 byte of data
 
     //send message
     can_send_frame(heartbeat_message);
@@ -830,21 +819,34 @@ void can_check_heartbeat_timer(void *pvParameters) {
 
   // Continuously check if the last heartbeat was received within the interval
   while (true) {
-    for (size_t i = 1; i < sizeof(can_modules) / sizeof(can_modules[0]); i++) {
+    for (size_t i = 0; i < sizeof(can_modules) / sizeof(can_modules[0]); i++) {
       if (can_modules[i]->is_alive && (millis() - can_modules[i]->last_heartbeat > can_heartbeat_timeout)) {
         can_modules[i]->is_alive = false;
         debug_msg(DEBUG_PARTIAL_CAN, "Module with ID:", true, can_modules[i]->bus_id);
         debug_msg(DEBUG_PARTIAL_CAN, "is not alive anymore", false, 0);
 
+        //send module fult message
+        struct message fault_message;
+        fault_message.id = can_module_brodcast.bus_id;
+        fault_message.extended = false;
+        fault_message.type = FRAME_DATA; // Set the frame type to data
+        fault_message.single_shot = false; // Set single shot flag to false
+        fault_message.data[0] = can_paket_type_module_fult; // Set the first byte to the fault packet type
+        fault_message.data[1] = can_modules[i]->bus_id & 0xFF; // Set the module ID in the fault message
+        fault_message.data[2] = (can_modules[i]->bus_id >> 8) & 0xFF; // Set the module ID in the fault message
+        fault_message.data[3] = 1; // Set the critical fault status to 1 (indicating a fault)
+        can_send_frame(fault_message); // Send the fault message
+
+        // Clear the data array to prevent stale data
+        memset(heartbeat_message.data, 0, sizeof(heartbeat_message.data));
+        heartbeat_message.data[0] = can_paket_type_heartbeat;
         heartbeat_message.data[1] = can_modules[i]->bus_id & 0xFF; // Set the module ID in the heartbeat message
         heartbeat_message.data[2] = (can_modules[i]->bus_id >> 8) & 0xFF; // Set the module ID in the heartbeat message
 
-        // Send the heartbeat message indicating the module is not alive
-        can_send_frame(heartbeat_message);
-        debug_msg(DEBUG_PARTIAL_CAN, "Heartbeat message sent for module with ID:", true, can_modules[i]->bus_id);
       }
     }
-    vTaskDelay(pdMS_TO_TICKS(10000)); // Add a delay to avoid busy-waiting
+    // Delay is set to half of can_heartbeat_timeout to ensure timely checks
+    vTaskDelay(pdMS_TO_TICKS(can_heartbeat_timeout / 2));
   }
 }
 

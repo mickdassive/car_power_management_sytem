@@ -22,6 +22,7 @@
 
 #include <Arduino.h>
 #include <Wire.h>
+#include <cmath>
 #include "adc.h"
 #include "DEBUG.h"
 #include "io.h"
@@ -383,7 +384,7 @@ void adc_threshold_set(struct pin pin_needed , uint16_t high_th, uint16_t low_th
 
   //set waht adc address to use based on adc_num
   if (pin_needed.adc_num == 1) {
-    adc_add = adc_1_add; // Set the ADC address to the first ADC
+    adc_add = adc_1_add; // Scale 12-bit value to 16-bit range
   } else if (pin_needed.adc_num == 2) {
     adc_add = adc_2_add; // Set the ADC address to the second ADC
   } else {
@@ -756,22 +757,25 @@ void IRAM_ATTR adc_event_clear(struct pin pin_needed) {
 }
 
 /**
- * @brief Reads the ADC value from the specified pin.
+ * @brief Reads the analog value from the specified ADC pin.
  *
- * This function communicates with an external ADC (Analog-to-Digital Converter)
- * over I2C to read the value from a specific channel and ADC number as specified
- * in the provided pin structure. It handles the selection of the correct ADC device
- * and channel, performs the I2C transaction, and returns the read value.
+ * This function reads an analog value from either an external ADC (via I2C) or the onboard ADC,
+ * depending on the configuration of the provided pin structure. For external ADCs, it selects the
+ * appropriate ADC device and channel, initiates a read operation, and returns the 16-bit result.
+ * For onboard ADCs, it reads the value using analogRead, shifts it to match the 16-bit format,
+ * and returns the result.
  *
- * @param pin_needed A struct containing information about the ADC number and channel to read from.
- *                   - pin_needed.adc_num: The ADC device number (1 or 2).
- *                   - pin_needed.adc_channel: The ADC channel number (0-7).
+ * @param pin_needed A struct pin specifying the ADC number, channel, pin number, and whether the pin is onboard.
+ *                   - pin_needed.adc_num: ADC device number (1 or 2 for external ADCs).
+ *                   - pin_needed.adc_channel: Channel number (0-7) for the external ADC.
+ *                   - pin_needed.pin_number: Pin number for onboard ADC.
+ *                   - pin_needed.onboard: Boolean flag indicating if the pin is onboard.
  *
- * @return int The 16-bit ADC value read from the specified channel, or -1 if an invalid ADC number is provided.
+ * @return int The 16-bit ADC value read from the specified pin/channel.
+ *             Returns -1 if an invalid ADC number is provided.
  *
- * @note The function uses debug messages for tracing and error reporting.
- * @note Returns -1 if an invalid ADC number is provided.
- * @note If an invalid channel is provided, a debug message is logged, but the function continues.
+ * @note The function uses I2C communication for external ADCs and analogRead for onboard ADCs.
+ *       Debug messages are generated for tracing and error reporting.
  */
 int adc_read(struct pin pin_needed) {
 
@@ -781,7 +785,12 @@ int adc_read(struct pin pin_needed) {
   uint16_t read_word = 0x0000;
   uint8_t adc_add = 0b0; // ADC address to be set based on adc_num
 
-  if (pin_needed.adc_num == 1) {
+  if (pin_needed.onboard) {
+    read_word = analogRead(pin_needed.pin_number); // Read from onboard ADC
+    //shift the read value to match the 16-bit format expected by the ADC
+    read_word = (read_word << 4); // Convert 12-bit to 16-bit
+    return read_word; // Return the read value directly for onboard ADC
+  } else if (pin_needed.adc_num == 1) {
     adc_add = adc_1_add; // Set the ADC address to the first ADC
   } else if (pin_needed.adc_num == 2) {
     adc_add = adc_2_add; // Set the ADC address to the second ADC
@@ -1007,9 +1016,6 @@ void adc_set_ch_current_limit(struct pin pin_needed, uint current_limit) {
     //set threshold value for the channel
     adc_threshold_set(pin_needed, 0xFFF, csn_counts_min); // Set the low threshold with the calculated counts and a high threshold of 0
   }
-
-  
-  return;
 }
 
 /**
@@ -1036,55 +1042,23 @@ void adc_set_ch_current_limit_rtos_wraper (void * peram) {
   vTaskDelete(NULL); // Delete the task after completion
 }
 
+
 /**
- * @brief Reads the current flowing through a specified channel using ADC measurements.
+ * @brief Reads the current flowing through a specified output channel and returns its value in milliamperes (mA).
  *
- * This function measures the voltage drop across a shunt resistor and MOSFET to calculate
- * the current in milliamperes (mA) for the given pin. It reads the supply voltage and the
- * current sense (CSN) voltage, computes the voltage drop, and then calculates the current
- * using Ohm's law.
+ * This function calculates the current by measuring the voltage drop across a current sense resistor
+ * connected to the specified pin. The calculation uses Ohm's law: I = V / R, where V is the measured
+ * voltage drop and R is the known resistance value. The result is converted to milliamperes.
  *
- * @param pin_needed The pin structure specifying the pin number and whether it is onboard.
+ * @param pin_needed The pin structure specifying the ADC channel to read from.
  * @return int The calculated current in milliamperes (mA).
- *
- * @note Assumes a 3.3V ADC reference and a 16-bit ADC resolution.
- * @note Uses the global variable 'adc_current_sense_resistance' for the shunt resistor value.
  */
 int IRAM_ATTR adc_read_ch_current (struct pin pin_needed) {
 
   debug_msg(DEBUG_PARTAL_ADC, "adc_read_ch_current called", false, 0);
 
-  //curent csn value
-  uint16_t current_csn_voltage_counts = 0;
-  float current_csn_voltage = 0;
-  float csn_min_voltage = 0;
-  uint16_t current_supply_voltage_counts = 0;
-  float current_supply_voltage = 0;
-  float v_drop = 0;
-  int current_mA = 0;
-
-  //read the curent supply voltage
-  current_supply_voltage_counts = (analogRead(pin_needed.pin_number)) << 4; // Read the analog value from the pin and map it to 16 bit
-
-  //convert the counts to voltage
-  current_supply_voltage = (((float)current_supply_voltage_counts / 65535.0) * 3.3) * 5; // Convert counts to voltage (assuming 3.3V reference)
-  
-  //read the curent csn value
-  if (pin_needed.onboard) {
-    current_csn_voltage_counts = (analogRead(pin_needed.pin_number)) << 4; // Read the analog value from the pin and map it to 16 bit
-  } else {
-    current_csn_voltage_counts = adc_read(pin_needed); // Read the ADC value from the specified pin
-  }
-
-  //convert the counts to voltage
-  current_csn_voltage = (((float)current_csn_voltage_counts / 65535.0) * 3.3) * 5; // Convert counts to voltage (assuming 3.3V reference)
-  current_supply_voltage = (((float)current_supply_voltage_counts / 65535.0) * 3.3) * 5; // Convert counts to voltage (assuming 3.3V reference)
-
-  //subtract the csn voltage from the supply voltage to get the voltage drop across the shunt resistor & mosfet
-  v_drop = current_supply_voltage - current_csn_voltage;
-
   //calculate the current in mA using the formula: I = V / R
-  current_mA = (int)((v_drop / adc_current_sense_resistance) * 1000.0); // Convert voltage drop to current in mA
+  int current_mA = (int)((adc_get_vdrop(pin_needed) / adc_current_sense_resistance) * 1000.0); // Convert voltage drop to current in mA
 
   debug_msg(DEBUG_PARTAL_ADC, "adc_read_ch_current complete with value", true, current_mA);
 
@@ -1136,7 +1110,7 @@ void IRAM_ATTR adc_alert_handler (struct pin alert_pin) {
     adc_event_clear(alert_source); // Clear the alert for the source channel
 
     //set fault state for the alert source
-    gate_pin.is_faulted = true; // Set the fault state for the gate pin
+    *gate_pin.is_faulted = true; // Set the fault state for the gate pin
       
   } else {
     debug_msg(DEBUG_PARTAL_ADC, "current limit not exceeded on alert source", false, 0);
@@ -1148,59 +1122,85 @@ void IRAM_ATTR adc_alert_handler (struct pin alert_pin) {
   return;
 }
 
+
 /**
- * @brief Checks the current on a peripheral power channel and disables the channel if the current exceeds a predefined limit.
+ * @brief Monitors the current on a peripheral power channel and disables it if the current exceeds a specified limit.
  *
- * This function reads the current value from the specified ADC pin associated with a peripheral power channel.
- * It compares the measured current (converted from ADC counts) to a user-defined current limit (in mA).
- * If the measured current exceeds the limit, the function disables the peripheral power channel by calling
- * the appropriate I/O function. Debug messages are logged throughout the process.
+ * This function runs in an infinite loop, periodically measuring the current flowing through a peripheral power channel
+ * by calculating the voltage drop across a shunt resistor. If the measured current (in mA) exceeds the configured
+ * current limit, the function disables the peripheral power channel and sets its fault state. Debug messages are logged
+ * for both normal and fault conditions. The function is intended to be run as a FreeRTOS task.
  *
- * No parameters or return value.
+ * @param parameter Pointer to task-specific parameters (unused in this implementation).
  */
-void adc_monitor_periral_ch_current(void * parameter) {
+void adc_monitor_peripheral_ch_current(void * parameter) {
 
-  debug_msg(DEBUG_PARTAL_ADC, "adc_check_periral_ch_current called", false, 0);
+  debug_msg(DEBUG_PARTAL_ADC, "adc_monitor_periral_ch_current called", false, 0);
 
-  //vars
-  float voltage_drop = 0.0;
-  float reference_voltage = 0.0; // Reference voltage for the ADC
-  float min_csn_voltage = 0.0; // Minimum CSN voltage for the current limit
-  int current_csn_voltage_counts = 0; // Current CSN voltage in counts
-  float ciurrent_csn_voltage = 0.0; // Current CSN voltage in volts
-
-  //calculate the voltage drop across the shunt resistor and MOSFET
-  voltage_drop = (*(peripheral_pwr_csn.chanel_curent_limit_pointer)) * adc_current_sense_resistance; // Calculate the voltage drop across the shunt resistor and MOSFET
-
-  //read the reference voltage for the ADC
-  reference_voltage = ((analogRead(peripheral_pwr_csn.pin_number) / 4095.0) * 3.3) * 5; // Convert the ADC reading to voltage (assuming 12-bit ADC and 3.3V reference)
-
-  //calculate the min csn voltage for the current limit
-  min_csn_voltage = reference_voltage - voltage_drop; // Calculate the minimum CSN voltage for the current limit
-
-
+  float current_limit = *(peripheral_pwr_csn.chanel_curent_limit_pointer);
 
   for (;;) {
-    //read csn voltage
-    current_csn_voltage_counts = analogRead(peripheral_pwr_csn.pin_number); // Read the ADC value from the peripheral power channel
-    ciurrent_csn_voltage = (((float)current_csn_voltage_counts / 4095.0) * 3.3) * 5; // Convert counts to voltage (assuming 12-bit ADC and 3.3V reference)
+    // Calculate the current in mA using the voltage drop across the shunt resistor
+    float voltage_drop = adc_get_vdrop(peripheral_pwr_csn);
+    float current_mA = (voltage_drop / adc_current_sense_resistance) * 1000.0;
 
-    if (ciurrent_csn_voltage < min_csn_voltage) {
+    if (current_mA > current_limit) {
       debug_msg(DEBUG_PARTAL_ADC, "current limit exceeded on peripheral power channel", false, 0);
       io_call(peripheral_pwr_csn, WRITE, low); // Disable the peripheral power channel
-
-      peripheral_pwr_csn.is_faulted = true; // Set the fault state for the peripheral power channel
-
+      *(peripheral_pwr_csn.is_faulted) = true; // Set the fault state for the peripheral power channel
     } else {
       debug_msg(DEBUG_PARTAL_ADC, "current limit not exceeded on peripheral power channel", false, 0);
     }
 
     vTaskDelay(100 / portTICK_PERIOD_MS); // Delay for 100 milliseconds before the next check
-
   }
-  
 
   return;
+}
+
+/**
+ * @brief Calculates the voltage drop across the shunt resistor and MOSFET for a given pin.
+ *
+ * This function reads the ADC value from a reference voltage pin and the specified pin,
+ * converts both readings to voltages, and computes the absolute voltage drop between them.
+ * It assumes a 16-bit ADC with a 3.3V reference. The result is multiplied by a scaling factor of 5,
+ * which compensates for a hardware voltage divider or external scaling circuit that reduces the measured voltage
+ * by a factor of 5 before it reaches the ADC input.
+ *
+ * @param pin_needed The pin structure specifying which pin to read the voltage from.
+ * @return The absolute voltage drop (in volts) between the reference and the specified pin, after scaling.
+ */
+float IRAM_ATTR adc_get_vdrop (struct pin pin_needed) {
+
+  debug_msg(DEBUG_PARTAL_ADC, "adc_get_vdrop called", false, 0);
+
+  //init local vars
+  int reference_voltage_counts = 0.0; // Reference voltage for the ADC
+  float reference_voltage = 0.0; // Reference voltage for the ADC
+  int current_csn_voltage_counts = 0; // Current CSN voltage in counts
+  float current_csn_voltage = 0.0; // Current CSN voltage in volts
+
+  //read the reference voltage for the ADC
+  reference_voltage_counts = adc_read(ref_12v); // Read the ADC value from the reference voltage pin
+  if (reference_voltage_counts == -1) {
+    debug_msg(DEBUG_PARTAL_ADC, "adc_get_vdrop: error reading ref_12v", false, 0);
+    return 0.0;
+  }
+  reference_voltage = ((reference_voltage_counts / 65535.0) * 3.3) * 5; // Convert the ADC reading to voltage (assuming 16-bit ADC and 3.3V reference)
+  
+  //read csn voltage
+  current_csn_voltage_counts = adc_read(pin_needed); // Read the ADC value from the specified pin
+  if (current_csn_voltage_counts == -1) {
+    debug_msg(DEBUG_PARTAL_ADC, "adc_get_vdrop: error reading pin_needed", false, 0);
+    return 0.0;
+  }
+  current_csn_voltage = ((current_csn_voltage_counts / 65535.0) * 3.3) * 5; // Convert counts to voltage (assuming 16-bit ADC and 3.3V reference)
+
+  //calculate the voltage drop across the shunt resistor and MOSFET
+  float voltage_drop = fabs(reference_voltage - current_csn_voltage); // Calculate the voltage drop across the shunt resistor and MOSFET
+
+  return voltage_drop;
+
 }
 
 

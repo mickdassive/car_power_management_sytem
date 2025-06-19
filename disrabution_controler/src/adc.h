@@ -223,7 +223,8 @@ void adc_set_ch_current_limit(struct pin pin_needed, uint current_limit);
 void adc_set_ch_current_limit_rtos_wraper (void * peram);
 int adc_read_ch_current (struct pin pin_needed);
 void IRAM_ATTR adc_alert_handler (struct pin alert_pin);
-void adc_monitor_periral_ch_current(void * parameter);
+void adc_monitor_peripheral_ch_current(void * parameter);
+float IRAM_ATTR adc_get_vdrop (struct pin pin_needed);
 
 
 

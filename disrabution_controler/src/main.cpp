@@ -20,7 +20,7 @@ void setup() {
 
   //rtos task setup
   xTaskCreate(
-    adc_monitor_periral_ch_current, // Task function
+    adc_monitor_peripheral_ch_current, // Task function
     "peripheral power bus monitoring", // Name of the task
     2048, // Stack size in words
     NULL, // Task parameters
