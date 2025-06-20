@@ -39,7 +39,7 @@ void setup() {
 
   xTaskCreate(
     can_send_heartbeat, // Task function
-    "can alert handler", // Name of the task
+    "can module beating heart", // Name of the task
     2048, // Stack size in words
     NULL, // Task parameters
     1, // Task priority

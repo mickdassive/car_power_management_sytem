@@ -11,82 +11,39 @@ enum DEBUG_LEVELS debug_level = DEBUG_NO_DEBUG;
 
 //functions
 
+
 /**
- * @brief Prints a debug message with optional attached value.
+ * @brief Prints a debug message to the Serial output if the specified debug level is enabled.
  * 
- * This function prints a debug message along with the current millis() value. 
- * The debug message can be customized based on the debug level provided.
+ * This function is intended to be called from an interrupt context (IRAM_ATTR).
+ * It prints a timestamp, the provided debug message, and optionally an attached value.
  * 
- * @param message_debug_level The debug level for the message.
- * @param debug_message The debug message to be printed.
- * @param include_num Flag indicating whether to include an attached value.
- * @param num_include The attached value to be printed (if include_num is true).
+ * @tparam T The type of the value to be included with the debug message.
+ * @param message_debug_level The debug level of this message (of type DEBUG_LEVELS).
+ * @param debug_message The message string to print.
+ * @param include_num If true, the value of num_include will be printed after the message.
+ * @param num_include The value to print if include_num is true.
+ * 
+ * @note The function will not print anything if either the global debug_level or the message_debug_level is DEBUG_NO_DEBUG.
+ * @note Only messages with a level equal to or lower than the current debug_level will be printed.
  */
-void IRAM_ATTR debug_msg(enum DEBUG_LEVELS message_debug_level, const char* debug_message, bool include_num, int num_include) {
-    if (debug_level != DEBUG_NO_DEBUG) {
-        switch (message_debug_level) {
-            case DEBUG_FULL:
-                Serial.print("debug msg at millis: ");
-                Serial.print(millis());
-                Serial.print("| ");
-                if (include_num) {
-                    Serial.print(debug_message);
-                    Serial.print("  | attached value: ");
-                    Serial.println(num_include);
-                } else {
-                    Serial.println(debug_message);
-                }
-                break;
-            case DEBUG_PARTIAL_IO:
-                Serial.print("debug msg at millis: ");
-                Serial.print(millis());
-                Serial.print("| ");
-                if (include_num) {
-                    Serial.print(debug_message);
-                    Serial.print("  | attached value: ");
-                    Serial.println(num_include);
-                } else {
-                    Serial.println(debug_message);
-                }
-                break;
-            case DEBUG_PARTIAL_USB:
-                Serial.print("debug msg at millis: ");
-                Serial.print(millis());
-                Serial.print("| ");
-                if (include_num) {
-                    Serial.print(debug_message);
-                    Serial.print("  | attached value: ");
-                    Serial.println(num_include);
-                } else {
-                    Serial.println(debug_message);
-                }
-                break;
-            case DEBUG_PARTAL_ADC:
-                Serial.print("debug msg at millis: ");
-                Serial.print(millis());
-                Serial.print("| ");
-                if (include_num) {
-                    Serial.print(debug_message);
-                    Serial.print("  | attached value: ");
-                    Serial.println(num_include);
-                } else {
-                    Serial.println(debug_message);
-                }
-                break;
-            case DEBUG_PARTIAL_CAN:
-                Serial.print("debug msg at millis: ");
-                Serial.print(millis());
-                Serial.print("| ");
-                if (include_num) {
-                    Serial.print(debug_message);
-                    Serial.print("  | attached value: ");
-                    Serial.println(num_include);
-                } else {
-                    Serial.println(debug_message);
-                }
-                break;
-            case DEBUG_NO_DEBUG:
-                break;
+template<typename T>
+void IRAM_ATTR debug_msg(enum DEBUG_LEVELS message_debug_level, const char* debug_message, bool include_num, T num_include) {
+    if (debug_level == DEBUG_NO_DEBUG || message_debug_level == DEBUG_NO_DEBUG) {
+        return;
+    }
+
+    // Only print if the message level is enabled by the current debug level
+    if (debug_level >= message_debug_level) {
+        Serial.print("debug msg at millis: ");
+        Serial.print(millis());
+        Serial.print("| ");
+        Serial.print(debug_message);
+        if (include_num) {
+            Serial.print("  | attached value: ");
+            Serial.println(num_include);
+        } else {
+            Serial.println();
         }
     }
 }
