@@ -34,7 +34,7 @@ void IRAM_ATTR debug_msg(enum DEBUG_LEVELS message_debug_level, const char* debu
     }
 
     // Only print if the message level is enabled by the current debug level
-    if (debug_level >= message_debug_level) {
+    if (debug_level == message_debug_level || debug_level == DEBUG_FULL) {
         Serial.print("debug msg at millis: ");
         Serial.print(millis());
         Serial.print("| ");
