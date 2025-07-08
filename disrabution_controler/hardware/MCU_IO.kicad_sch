@@ -1904,7 +1904,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Connector_Generic:Conn_02x05_Top_Bottom"
+		(symbol "Connector_Generic:Conn_02x05_Odd_Even"
 			(pin_names
 				(offset 1.016)
 				(hide yes)
@@ -1920,7 +1920,7 @@
 					)
 				)
 			)
-			(property "Value" "Conn_02x05_Top_Bottom"
+			(property "Value" "Conn_02x05_Odd_Even"
 				(at 1.27 -7.62 0)
 				(effects
 					(font
@@ -1946,7 +1946,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "Generic connector, double row, 02x05, top/bottom pin numbering scheme (row 1: 1...pins_per_row, row2: pins_per_row+1 ... num_pins), script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(property "Description" "Generic connector, double row, 02x05, odd/even pin numbering scheme (row 1 odd numbers, row 2 even numbers), script generated (kicad-library-utils/schlib/autogen/connector/)"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1973,7 +1973,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "Conn_02x05_Top_Bottom_1_1"
+			(symbol "Conn_02x05_Odd_Even_1_1"
 				(rectangle
 					(start -1.27 6.35)
 					(end 3.81 -6.35)
@@ -2116,24 +2116,6 @@
 				(pin passive line
 					(at -5.08 2.54 0)
 					(length 3.81)
-					(name "Pin_2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at -5.08 0 0)
-					(length 3.81)
 					(name "Pin_3"
 						(effects
 							(font
@@ -2150,25 +2132,7 @@
 					)
 				)
 				(pin passive line
-					(at -5.08 -2.54 0)
-					(length 3.81)
-					(name "Pin_4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at -5.08 -5.08 0)
+					(at -5.08 0 0)
 					(length 3.81)
 					(name "Pin_5"
 						(effects
@@ -2186,25 +2150,7 @@
 					)
 				)
 				(pin passive line
-					(at 7.62 5.08 180)
-					(length 3.81)
-					(name "Pin_6"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "6"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 7.62 2.54 180)
+					(at -5.08 -2.54 0)
 					(length 3.81)
 					(name "Pin_7"
 						(effects
@@ -2222,16 +2168,70 @@
 					)
 				)
 				(pin passive line
-					(at 7.62 0 180)
+					(at -5.08 -5.08 0)
 					(length 3.81)
-					(name "Pin_8"
+					(name "Pin_9"
 						(effects
 							(font
 								(size 1.27 1.27)
 							)
 						)
 					)
-					(number "8"
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 7.62 5.08 180)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 7.62 2.54 180)
+					(length 3.81)
+					(name "Pin_4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 7.62 0 180)
+					(length 3.81)
+					(name "Pin_6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2242,14 +2242,14 @@
 				(pin passive line
 					(at 7.62 -2.54 180)
 					(length 3.81)
-					(name "Pin_9"
+					(name "Pin_8"
 						(effects
 							(font
 								(size 1.27 1.27)
 							)
 						)
 					)
-					(number "9"
+					(number "8"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -17671,6 +17671,107 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector_Generic:Conn_02x05_Odd_Even")
+		(at 90.17 180.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "2e19e1c3-0d31-4c7d-ac4a-19e45dcba2bf")
+		(property "Reference" "J3"
+			(at 91.44 170.18 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "~"
+			(at 91.44 172.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical"
+			(at 90.17 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 90.17 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, double row, 02x05, odd/even pin numbering scheme (row 1 odd numbers, row 2 even numbers), script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 90.17 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Digikey Part Number" "S9169-ND"
+			(at 90.17 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "6"
+			(uuid "88eedbc2-e0de-45d9-84a8-874c9082c093")
+		)
+		(pin "8"
+			(uuid "66826bd9-3890-442b-8e95-71cd3f708869")
+		)
+		(pin "4"
+			(uuid "cb130bc1-ea02-4309-b672-6726a8005e99")
+		)
+		(pin "9"
+			(uuid "5c67651c-eb82-4044-9909-8d47d6436529")
+		)
+		(pin "2"
+			(uuid "08c7c91e-c9a1-4cea-8aae-613ec8aa13ca")
+		)
+		(pin "10"
+			(uuid "bb0c59cd-ca19-452a-9e5b-0dfc3d5c804c")
+		)
+		(pin "7"
+			(uuid "8a190907-aa5b-4933-a395-6e6485ef6f82")
+		)
+		(pin "5"
+			(uuid "fa53b865-e0c6-4de9-a70e-8dc8210a2c61")
+		)
+		(pin "3"
+			(uuid "566c029f-de91-4e23-970a-f7f034887525")
+		)
+		(pin "1"
+			(uuid "f30f92ca-3bb0-4c97-92c6-c4bdff53b13c")
+		)
+		(instances
+			(project "distrabution_controler"
+				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/cc9feaf5-e3f6-4501-9fb5-0cfb07e51032"
+					(reference "J3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 85.09 175.26 270)
 		(unit 1)
@@ -22627,98 +22728,6 @@
 			(project "distrabution_controler"
 				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/cc9feaf5-e3f6-4501-9fb5-0cfb07e51032"
 					(reference "#PWR021")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector_Generic:Conn_02x05_Top_Bottom")
-		(at 90.17 180.34 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "ed59d9eb-63bc-493d-926b-e874d9d96307")
-		(property "Reference" "J3"
-			(at 91.44 170.18 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "~"
-			(at 91.44 172.72 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical"
-			(at 90.17 180.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 90.17 180.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Generic connector, double row, 02x05, top/bottom pin numbering scheme (row 1: 1...pins_per_row, row2: pins_per_row+1 ... num_pins), script generated (kicad-library-utils/schlib/autogen/connector/)"
-			(at 90.17 180.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "9"
-			(uuid "2cc76248-c364-4ae7-8cae-1f38d99967b9")
-		)
-		(pin "8"
-			(uuid "9a570938-33e3-4ac4-a00a-bdce21270379")
-		)
-		(pin "2"
-			(uuid "3aa02657-1a60-4cf3-921f-7bf06dce7c52")
-		)
-		(pin "6"
-			(uuid "27924f40-f40f-413d-8017-83c7caa35f04")
-		)
-		(pin "5"
-			(uuid "653e849d-e613-4bba-a34a-6f7bd20d3829")
-		)
-		(pin "3"
-			(uuid "63cebcae-e268-40da-80a8-5ae5615ab67c")
-		)
-		(pin "4"
-			(uuid "627adf6b-c160-4ed0-95f4-7e21ca85e1b2")
-		)
-		(pin "7"
-			(uuid "7b982a23-4a1b-418f-9d53-62489aa19527")
-		)
-		(pin "10"
-			(uuid "47ff9149-9594-4fe9-96b5-62fa14164c27")
-		)
-		(pin "1"
-			(uuid "676b00c1-dda1-49be-992a-05d1bf45ca24")
-		)
-		(instances
-			(project "distrabution_controler"
-				(path "/2800815a-f06a-4e36-93dc-fea3151edeb4/cc9feaf5-e3f6-4501-9fb5-0cfb07e51032"
-					(reference "J3")
 					(unit 1)
 				)
 			)
